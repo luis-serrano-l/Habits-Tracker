@@ -1,0 +1,72 @@
+<h1>My habits for happiness</h1>
+<div id="new-save-btns">
+  <button phx-click="new-habit" id="new-btn" phx-disable-with="Saving...">
+    New
+  </button>
+  <button phx-click="save" id="save-btn">
+    Save
+  </button>
+</div>
+<div :if={@new} class="form">
+  <form action="#" phx-submit="add-habit">
+    <input type="text" placeholder="New habit" class="text-input" name="habit" required />
+    <input type="submit" value="Add" id="submit" phx_disable_with="Sending..." />
+  </form>
+</div>
+<div id="habits">
+  <%= for habit <- @habits do %>
+    <div>
+      <div class="habit">
+        <span><%= habit %></span>
+        <div class="habit-options" id="option-box">
+          <select name="select">
+            <%= for option <- possible_answers(assigns, habit) do %>
+              <option value={option} phx-click="select" phx-value-habit={habit}>
+                <%= option %>
+              </option>
+            <% end %>
+          </select>
+          <div id="options-reset">
+            <input
+              type="button"
+              value="option"
+              id="options"
+              name="habit"
+              phx-click="open-option"
+              phx-value-habit={habit}
+            />
+            <input
+              type="button"
+              value="clear"
+              id="reset"
+              name="habit"
+              phx-click="reset-options"
+              phx-value-habit={habit}
+            />
+          </div>
+          <%= if assigns.open_option == habit do %>
+            <form action="#" phx-submit="add-option">
+              <input type="text" placeholder="Add option" name="option" id="option-input" />
+              <input type="hidden" name="habit" value={habit} />
+            </form>
+          <% end %>
+          <!-- <.link patch={"/chart?#{%{habit: habit}}"}> -->
+          <.chart_link habit={habit}>
+            <%= "chart" %>
+          </.chart_link>
+        </div>
+      </div>
+      <div id="each">
+        <input
+          type="button"
+          data-confirm="Are you sure you want to stop keeping track of this habit?"
+          value="delete"
+          id="delete"
+          name="habit"
+          phx-click="delete-habit"
+          phx-value-habit={habit}
+        />
+      </div>
+    </div>
+  <% end %>
+</div>

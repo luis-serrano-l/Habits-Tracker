@@ -1,0 +1,6 @@
+<div id="chart" phx-update="ignore" phx-hook="RenderChart">
+  <%= habit_to_chart(@days, @habit) %>
+</div>
+<div>
+  <.legend_table days={@days} habit={@habit}></.legend_table>
+</div>
