@@ -30,6 +30,7 @@ defmodule HabitsWeb.TrackerLive do
     {:ok, socket}
   end
 
+  # Renders link to the chart for a habit.
   def chart_link(assigns) do
     ~H"""
     <.link href={~p"/habits/#{@habit}"}>
@@ -38,6 +39,7 @@ defmodule HabitsWeb.TrackerLive do
     """
   end
 
+  # Saves changes
   def handle_event("save", _, socket) do
     create_or_update(socket.assigns.opts_map, socket.assigns.date)
 
@@ -54,6 +56,14 @@ defmodule HabitsWeb.TrackerLive do
      |> assign(:questions, questions)}
   end
 
+  @doc """
+  Picks an option for a habit.
+
+  - The selected option jumps to the head of the list.
+  - Now the first option in the list is the one that will be shown in the chart when saved.
+
+  Changes need to be saved.
+  """
   def handle_event("select", %{"value" => option, "habit" => habit}, socket) do
     opts_map =
       Map.update(
@@ -168,6 +178,10 @@ defmodule HabitsWeb.TrackerLive do
     Map.replace(socket.assigns.opts_map, habit, [])
   end
 
+  @doc """
+  - If today is not in the database, it creates the day with the habits.
+  - Else it updates changes.
+  """
   def create_or_update(opts_map, date) do
     days = Tracker.list_days()
 
