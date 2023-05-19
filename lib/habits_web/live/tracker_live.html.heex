@@ -14,59 +14,57 @@
   </form>
 </div>
 <div id="habits">
-  <%= for habit <- @habits do %>
-    <div>
-      <div class="habit">
-        <span><%= habit %></span>
-        <div class="habit-options" id="option-box">
-          <select name="select">
-            <%= for option <- possible_answers(assigns, habit) do %>
-              <option value={option} phx-click="select" phx-value-habit={habit}>
-                <%= option %>
-              </option>
-            <% end %>
-          </select>
-          <div id="options-reset">
-            <input
-              type="button"
-              value="option"
-              id="options"
-              name="habit"
-              phx-click="open-option"
-              phx-value-habit={habit}
-            />
-            <input
-              type="button"
-              value="clear"
-              id="reset"
-              name="habit"
-              phx-click="reset-options"
-              phx-value-habit={habit}
-            />
-          </div>
-          <%= if assigns.open_option == habit do %>
-            <form action="#" phx-submit="add-option">
-              <input type="text" placeholder="Add option" name="option" id="option-input" />
-              <input type="hidden" name="habit" value={habit} />
-            </form>
-          <% end %>
-          <!-- <.link patch={"/chart?#{%{habit: habit}}"}> -->
-          <.chart_link habit={habit}>
-            <%= "chart" %>
-          </.chart_link>
+  <div :for={habit <- @habits}>
+    <div class="habit">
+      <span><%= habit %></span>
+      <div class="habit-options" id="option-box">
+        <select name="select">
+          <option
+            :for={option <- possible_answers(assigns, habit)}
+            value={option}
+            phx-click="select"
+            phx-value-habit={habit}
+          >
+            <%= option %>
+          </option>
+        </select>
+        <div id="options-reset">
+          <input
+            type="button"
+            value="option"
+            id="options"
+            name="habit"
+            phx-click="open-option"
+            phx-value-habit={habit}
+          />
+          <input
+            type="button"
+            value="clear"
+            id="reset"
+            name="habit"
+            phx-click="reset-options"
+            phx-value-habit={habit}
+          />
         </div>
-      </div>
-      <div id="each">
-        <input
-          type="button"
-          data-confirm="Are you sure you want to stop keeping track of this habit?"
-          value="delete"
-          id="delete"
-          name="habit"
-          phx-click="delete-habit"
-          phx-value-habit={habit}
-        />
+        <form :if={assigns.open_option == habit} action="#" phx-submit="add-option">
+          <input type="text" placeholder="Add option" name="option" id="option-input" />
+          <input type="hidden" name="habit" value={habit} />
+        </form>
+        <.chart_link :if={habit in @questions} habit={habit}>
+          <%= "chart" %>
+        </.chart_link>
       </div>
     </div>
-  <% end %>
+    <div id="each">
+      <input
+        type="button"
+        data-confirm="Are you sure you want to stop keeping track of this habit?"
+        value="delete"
+        id="delete"
+        name="habit"
+        phx-click="delete-habit"
+        phx-value-habit={habit}
+      />
+    </div>
+  </div>
 </div>

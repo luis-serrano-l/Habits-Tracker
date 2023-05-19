@@ -140,12 +140,22 @@ main.container {
   box-shadow: 0 0 0.5rem rgba(72, 165, 205, 0.3);
 }
 
+#chart {
+  width: 95%;
+  margin: 1em auto;
+}
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
   color: white;
   padding: 0.3em;
   margin: 0.7em;
+}
+
+table {
+  position: absolute;
+  right: 10%;
 }
 
 /* Style for the individual habits 

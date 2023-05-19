@@ -15,13 +15,16 @@ defmodule HabitsWeb.TrackerLive do
 
     opts_map = create_opts_map(days, today, most_recent_day)
 
+    questions = Enum.map(days, fn day -> Map.keys(day.questions) end) |> List.flatten()
+
     socket =
       assign(socket,
         habits: Map.keys(opts_map),
         opts_map: opts_map,
-        new: true,
+        new: false,
         open_option: false,
-        date: today
+        date: today,
+        questions: questions
       )
 
     {:ok, socket}
@@ -35,26 +38,20 @@ defmodule HabitsWeb.TrackerLive do
     """
   end
 
-  def create_opts_map(_, _, []), do: %{}
-
-  def create_opts_map(days, today, most_recent_day) do
-    case Enum.find(days, &(&1.date == today)) do
-      nil -> most_recent_day.questions
-      day -> day.questions
-    end
-  end
-
   def handle_event("save", _, socket) do
     create_or_update(socket.assigns.opts_map, socket.assigns.date)
 
     Process.send_after(self(), :clear_flash, 2000)
+    days = Tracker.list_days()
+    questions = Enum.map(days, fn day -> Map.keys(day.questions) end) |> List.flatten()
 
     {:noreply,
      put_flash(
        socket,
        :info,
        "Progress saved. Remember your habits will lead you to your goals!"
-     )}
+     )
+     |> assign(:questions, questions)}
   end
 
   def handle_event("select", %{"value" => option, "habit" => habit}, socket) do
@@ -126,21 +123,37 @@ defmodule HabitsWeb.TrackerLive do
     {:noreply, socket}
   end
 
-  # quiero hacer un patch pero no se como se hace
-  def handle_event("open-chart", _, socket) do
-    {:noreply, push_patch(socket, to: "/chart")}
-  end
-
   def handle_info(:clear_flash, socket) do
     {:noreply, clear_flash(socket)}
   end
 
-  # <span><%= live_patch "Edit", to: Routes.product_show_path(@socket, :edit, @product), class: "button" %></span>
-  # <%= if @live_action in [:edit] do %>
+  @doc """
+  - Creates today's habit map. It has the habits and the list of options for each habit.
+  - The first option in the list is the one that is picked by default.
+  - If today hasn't been saved yet, it displays the habits and options of the last day saved.
+
+  opts_map => %{
+    "How are you feeling today?" => ["1", "2", "3", "4", "5"],
+    "Did you wake up early?" => ["Yes", "No"]
+  }
+  Later, if we pick a different option, it will become the first in the list.
+  """
+  @spec create_opts_map(days :: list(map), today :: map, most_recent_day :: map) :: map
+  def create_opts_map(_, _, []), do: %{}
+
+  def create_opts_map(days, today, most_recent_day) do
+    case Enum.find(days, &(&1.date == today)) do
+      nil -> most_recent_day.questions
+      day -> day.questions
+    end
+  end
+
+  # Displays the options available for a certain habit.
   defp possible_answers(assigns, habit) do
     assigns.opts_map[habit]
   end
 
+  # Adds an option to chose for a habit.
   defp add_option(socket, option, habit) do
     Map.update(
       socket.assigns.opts_map,
@@ -150,6 +163,7 @@ defmodule HabitsWeb.TrackerLive do
     )
   end
 
+  # Clears all options.
   defp clear_options(socket, habit) do
     Map.replace(socket.assigns.opts_map, habit, [])
   end
