@@ -39,6 +39,10 @@ defmodule HabitsWeb.TrackerLive do
     """
   end
 
+  def handle_event("yesterday", _, socket), do: change_day(-1, socket)
+
+  def handle_event("tomorrow", _, socket), do: change_day(1, socket)
+
   # Saves changes
   def handle_event("save", _, socket) do
     create_or_update(socket.assigns.opts_map, socket.assigns.date)
@@ -135,6 +139,22 @@ defmodule HabitsWeb.TrackerLive do
 
   def handle_info(:clear_flash, socket) do
     {:noreply, clear_flash(socket)}
+  end
+
+  defp change_day(value, socket) do
+    days = Tracker.list_days()
+
+    case Enum.find(days, &(&1.date == Date.add(socket.assigns.date, value))) do
+      nil ->
+        {:noreply, update(socket, :date, &Date.add(&1, value))}
+
+      day ->
+        {:noreply,
+         socket
+         |> update(:date, &Date.add(&1, value))
+         |> assign(:opts_map, day.questions)
+         |> assign(:habits, Map.keys(day.questions))}
+    end
   end
 
   @doc """

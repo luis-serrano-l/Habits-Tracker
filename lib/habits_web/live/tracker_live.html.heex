@@ -1,9 +1,18 @@
 <h1>My habits for happiness</h1>
+<div id="date-block">
+  <div id="date">
+    <%= "Today: #{@date}" %>
+  </div>
+  <div>
+    <button phx-click="yesterday" id="yesterday-btn">Yesterday</button>
+    <button phx-click="tomorrow" id="tomorrow-btn">Tomorrow</button>
+  </div>
+</div>
 <div id="new-save-btns">
-  <button phx-click="new-habit" id="new-btn" phx-disable-with="Saving...">
+  <button phx-click="new-habit" id="new-btn">
     New
   </button>
-  <button phx-click="save" id="save-btn">
+  <button phx-click="save" id="save-btn" phx-disable-with="Saving...">
     Save
   </button>
 </div>

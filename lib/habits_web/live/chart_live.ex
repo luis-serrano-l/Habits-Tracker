@@ -4,7 +4,7 @@ defmodule HabitsWeb.ChartLive do
   alias Habits.Tracker
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, habit: nil, days: [])}
+    {:ok, socket}
   end
 
   # Assigns the habit that will be shown in the chart.

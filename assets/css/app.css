@@ -422,7 +422,7 @@ button:hover {
   border: 1px solid transparent;
   border-radius: 4px;
   padding: 0 0.7em;
-  position: fixed;
+  position: absolute;
   left: 7%;
   top: 1em;
   width: fit-content;
@@ -430,6 +430,7 @@ button:hover {
   background-color: #090956;
   border-color: #2f8899;
   box-shadow: 0 0 0.3rem rgba(72, 165, 205, 0.3);
+  z-index: 9999;
 }
 
 a {
@@ -444,6 +445,20 @@ a {
 a:hover {
   color: #23247c; 
   text-decoration: underline; 
+}
+
+#date-block {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+}
+
+#date {
+  color: white;
+}
+
+#yesterday-btn, #tomorrow-btn {
+  background-color: #113e4d;
 }
 
 .group {
