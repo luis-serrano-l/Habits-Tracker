@@ -30,7 +30,7 @@ defmodule HabitsWeb.TrackerLive do
     {:ok, socket}
   end
 
-  # Renders link to the chart for a habit.
+  # Renders link to the chart that shows the records of a habit.
   def chart_link(assigns) do
     ~H"""
     <.link href={~p"/habits/#{@habit}"}>
@@ -39,6 +39,7 @@ defmodule HabitsWeb.TrackerLive do
     """
   end
 
+  # Travelling in time is available.
   def handle_event("yesterday", _, socket), do: change_day(-1, socket)
 
   def handle_event("tomorrow", _, socket), do: change_day(1, socket)
@@ -145,9 +146,11 @@ defmodule HabitsWeb.TrackerLive do
     days = Tracker.list_days()
 
     case Enum.find(days, &(&1.date == Date.add(socket.assigns.date, value))) do
+      # If the day is not in the database, it will display the current habit-options unsaved.
       nil ->
         {:noreply, update(socket, :date, &Date.add(&1, value))}
 
+      # If the day in the database, it will display the habit-options recorded that day.
       day ->
         {:noreply,
          socket
