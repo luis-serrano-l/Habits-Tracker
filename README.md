@@ -1,14 +1,14 @@
 ## Example
 
-<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711" width=50% height=50%>
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711" width=80% height=80%>
 ---
-![Screenshot from 2023-05-24 17-26-28](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/08ac5c98-38b8-444e-8479-68ab3851220d)
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/08ac5c98-38b8-444e-8479-68ab3851220d" width=80% height=80%>
 ---
-![Screenshot from 2023-05-24 17-26-43](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/abc5d9ab-02c3-4041-a8d4-135fd16507c9)
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/abc5d9ab-02c3-4041-a8d4-135fd16507c9" width=80% height=80%>
 ---
-![Screenshot from 2023-05-24 17-27-02](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6d6b9ac9-71da-4a2f-9d65-f4ed91aa468d)
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6d6b9ac9-71da-4a2f-9d65-f4ed91aa468d" width=80% height=80%>
 ---
-![Screenshot from 2023-05-24 17-27-17](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/a982b7fb-e7f3-47bf-9143-868ff71a022b)
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/a982b7fb-e7f3-47bf-9143-868ff71a022b" width=80% height=80%>
 
 ### Don't forget your coffee!
 New and improved functionalities incoming
