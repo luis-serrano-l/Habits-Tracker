@@ -1,15 +1,15 @@
 ## Example
 
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711" width=87% height=87%>
-<hr width="90%">
+<hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/08ac5c98-38b8-444e-8479-68ab3851220d" width=87% height=87%>
-<hr>
+<hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/abc5d9ab-02c3-4041-a8d4-135fd16507c9" width=87% height=87%>
-<hr>
+<hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6d6b9ac9-71da-4a2f-9d65-f4ed91aa468d" width=87% height=87%>
-<hr>
+<hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/a982b7fb-e7f3-47bf-9143-868ff71a022b" width=87% height=87%>
-<hr>
+<hr width="88%">
 
 ### Don't forget your coffee!
 New and improved functionalities incoming
