@@ -1,5 +1,5 @@
 ## Example
-![Screenshot from 2023-05-24 17-26-15](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711 | width=50% height=50%)
+![Screenshot from 2023-05-24 17-26-15](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711 | width=50 height=50)
 ---
 ![Screenshot from 2023-05-24 17-26-28](https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/08ac5c98-38b8-444e-8479-68ab3851220d)
 ---
