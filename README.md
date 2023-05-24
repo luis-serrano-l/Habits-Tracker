@@ -1,7 +1,7 @@
 ## Example
 
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/65142328-063b-48a5-88ac-3c1a38578711" width=87% height=87%>
-<hr>
+<hr width="90%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/08ac5c98-38b8-444e-8479-68ab3851220d" width=87% height=87%>
 <hr>
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/abc5d9ab-02c3-4041-a8d4-135fd16507c9" width=87% height=87%>
