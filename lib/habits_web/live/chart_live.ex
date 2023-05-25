@@ -57,7 +57,7 @@ defmodule HabitsWeb.ChartLive do
       assigns[:days]
       |> Enum.filter(fn day -> habit in Map.keys(day.questions) end)
 
-    options = List.last(days_to_track).questions[habit] |> Enum.sort()
+    options = List.last(days_to_track).questions[habit] |> Enum.sort(:desc)
     assigns = assign(assigns, :options, options) |> assign(:habit, habit)
 
     ~H"""
@@ -69,7 +69,7 @@ defmodule HabitsWeb.ChartLive do
         </tr>
         <tr :for={option <- @options}>
           <td><%= option %></td>
-          <td><%= Enum.find_index(@options, &(&1 == option)) + 1 %></td>
+          <td><%= length(@options) - Enum.find_index(@options, &(&1 == option)) %></td>
         </tr>
       </table>
     </div>
