@@ -6,9 +6,9 @@
 <hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/abc5d9ab-02c3-4041-a8d4-135fd16507c9" width=87% height=87%>
 <hr width="88%">
-<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6d6b9ac9-71da-4a2f-9d65-f4ed91aa468d" width=87% height=87%>
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6bae32e4-7be8-462a-bd1b-3dee7dd4693e" width=87% height=87%>
 <hr width="88%">
-<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/a982b7fb-e7f3-47bf-9143-868ff71a022b" width=87% height=87%>
+<img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/f0a5a442-6eca-4981-a829-cfb086fb3254" width=87% height=87%>
 <hr width="88%">
 
 ### Don't forget your coffee!
