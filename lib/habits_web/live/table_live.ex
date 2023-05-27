@@ -16,8 +16,7 @@ defmodule HabitsWeb.TableLive do
     # We are going to ignore if there is a non_integer option that was never selected.
     nums_habits =
       habit_list
-      |> Stream.map(&records(&1, days))
-      |> Enum.filter(&all_nums?/1)
+      |> Enum.filter(&all_nums?(records(&1, days)))
 
     {:ok, assign(socket, days: days, habit_list: habit_list, nums_habits: nums_habits)}
   end

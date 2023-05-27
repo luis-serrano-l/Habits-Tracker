@@ -1,4 +1,9 @@
 <h1>My habits for happiness</h1>
+<div id="table-link">
+  <.link navigate={~p"/table"}>
+    TABLE
+  </.link>
+</div>
 <div id="date-block">
   <div id="date">
     <%= "Today: #{@date}" %>
@@ -59,7 +64,7 @@
           <input type="text" placeholder="Add option" name="option" id="option-input" />
           <input type="hidden" name="habit" value={habit} />
         </form>
-        <.link :if={habit in @questions} href={~p"/habits/#{habit}"}>
+        <.link :if={habit in @questions} href={~p"/habits/#{habit}"} id="chart-link">
           chart
         </.link>
       </div>
