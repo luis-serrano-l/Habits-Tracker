@@ -21,6 +21,12 @@ defmodule Habits.Tracker do
     Repo.all(Day)
   end
 
+  def get_day_by_date(date) do
+    from(Day)
+    |> where(date: ^date)
+    |> Repo.one()
+  end
+
   @doc """
   Gets a single day.
 
