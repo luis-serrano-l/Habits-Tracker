@@ -59,9 +59,9 @@
           <input type="text" placeholder="Add option" name="option" id="option-input" />
           <input type="hidden" name="habit" value={habit} />
         </form>
-        <.chart_link :if={habit in @questions} habit={habit}>
-          <%= "chart" %>
-        </.chart_link>
+        <.link :if={habit in @questions} href={~p"/habits/#{habit}"}>
+          chart
+        </.link>
       </div>
     </div>
     <div id="each">

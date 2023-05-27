@@ -461,6 +461,16 @@ a:hover {
   background-color: #113e4d;
 }
 
+#habit-table {
+  position: relative;
+  margin: 2em auto;
+  right: 0;
+  background-color: rgb(2, 62, 57);
+}
+
+#habit-head {
+  background-color: #012628;
+}
 .group {
   background-color: greenyellow;
   opacity: 0;

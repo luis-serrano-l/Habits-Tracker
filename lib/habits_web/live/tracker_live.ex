@@ -30,15 +30,6 @@ defmodule HabitsWeb.TrackerLive do
     {:ok, socket}
   end
 
-  # Renders link to the chart that shows the records of a habit.
-  def chart_link(assigns) do
-    ~H"""
-    <.link href={~p"/habits/#{@habit}"}>
-      <%= render_slot(@inner_block) %>
-    </.link>
-    """
-  end
-
   # Travelling in time is available.
   def handle_event("yesterday", _, socket), do: change_day(-1, socket)
 
@@ -103,10 +94,6 @@ defmodule HabitsWeb.TrackerLive do
   end
 
   def handle_event("add-habit", %{"habit" => habit}, socket) do
-    # I found an error when starting the first time, that if you create a habit that already exists,
-    # you need to update the options
-    # habit_map = Enum.map(Tracker.list_days(), &(&1.questions))
-    # for opts_map <- habit_map, habit in opts_map, do: opts_map
     if habit in socket.assigns.habits do
       Process.send_after(self(), :clear_flash, 900)
       {:noreply, put_flash(socket, :error, "Already existing habit")}

@@ -2,5 +2,16 @@
   <%= habit_to_chart(@days, @habit) %>
 </div>
 <div>
-  <.legend_table days={@days} habit={@habit}></.legend_table>
+  <div>
+    <table>
+      <tr>
+        <th><%= @habit %></th>
+        <th>Value</th>
+      </tr>
+      <tr :for={option <- @options}>
+        <td><%= option %></td>
+        <td><%= length(@options) - Enum.find_index(@options, &(&1 == option)) %></td>
+      </tr>
+    </table>
+  </div>
 </div>
