@@ -1,0 +1,36 @@
+<table id="habit-table">
+  <head>
+    <tr id="habit-head">
+      <th>Habit</th>
+      <th>Avg</th>
+      <th>Min</th>
+      <th>Max</th>
+      <th>Most</th>
+      <th>Least</th>
+      <th>Days</th>
+    </tr>
+  </head>
+  <tbody>
+    <tr :for={habit <- @habit_list}>
+      <td><%= habit %></td>
+      <td>
+        <%= calculate_value(:avg, habit in @nums_habits, habit, @days) %>
+      </td>
+      <td>
+        <%= calculate_value(:min, habit in @nums_habits, habit, @days) %>
+      </td>
+      <td>
+        <%= calculate_value(:max, habit in @nums_habits, habit, @days) %>
+      </td>
+      <td>
+        <%= get_value(:most, records(habit, @days)) %>
+      </td>
+      <td>
+        <%= get_value(:least, records(habit, @days)) %>
+      </td>
+      <td>
+        <%= get_value(:times, records(habit, @days)) %>
+      </td>
+    </tr>
+  </tbody>
+</table>

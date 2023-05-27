@@ -10,7 +10,6 @@
 <hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/f0a5a442-6eca-4981-a829-cfb086fb3254" width=87% height=87%>
 <hr width="88%">
-
 ### Don't forget your coffee!
 New and improved functionalities incoming
 

@@ -428,22 +428,19 @@ button:hover {
   width: fit-content;
   color: #ffffff;
   background-color: #090956;
-  border-color: #2f8899;
+  border-color: #2fb09f;
   box-shadow: 0 0 0.3rem rgba(72, 165, 205, 0.3);
   z-index: 9999;
 }
 
 a {
-  color: #2532a7; 
+  color: #eafbf8; 
   text-decoration: none; 
-  transition: color 0.3s ease; 
-  position: relative;
-  top: 0.05em;
-  left: 4em;
+  transition: color 0.1s ease; 
 }
 
 a:hover {
-  color: #23247c; 
+  color: #4749aa; 
   text-decoration: underline; 
 }
 
@@ -461,6 +458,31 @@ a:hover {
   background-color: #113e4d;
 }
 
+#habit-table {
+  position: relative;
+  margin: 2em auto;
+  right: 0;
+  background-color: rgb(2, 62, 57);
+}
+
+#habit-head {
+  background-color: #012628;
+}
+
+#table-link {
+  position: absolute;
+  right: 17%;
+  top: 10%;
+  font-size: x-large;
+  font-weight: 800;
+}
+
+#chart-link {
+  color: rgb(24, 24, 144);
+  position: relative;
+  top: 0.05em;
+  left: 4em;
+}
 .group {
   background-color: greenyellow;
   opacity: 0;

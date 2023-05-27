@@ -30,15 +30,6 @@ defmodule HabitsWeb.TrackerLive do
     {:ok, socket}
   end
 
-  # Renders link to the chart that shows the records of a habit.
-  def chart_link(assigns) do
-    ~H"""
-    <.link href={~p"/habits/#{@habit}"}>
-      <%= render_slot(@inner_block) %>
-    </.link>
-    """
-  end
-
   # Travelling in time is available.
   def handle_event("yesterday", _, socket), do: change_day(-1, socket)
 
