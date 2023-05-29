@@ -22,10 +22,25 @@
   </button>
 </div>
 <div :if={@new} class="form">
+  <div>
+    <.form for={@form} phx-submit="add-habit">
+      <.input
+        type="text"
+        field={@form[:questions]}
+        placeholder="New habit"
+        id="text-input"
+        name="habit"
+        required
+      />
+      <button id="submit" phx_disable_with="Sending...">Add</button>
+    </.form>
+  </div>
+  <!--
   <form action="#" phx-submit="add-habit">
     <input type="text" placeholder="New habit" class="text-input" name="habit" required />
     <input type="submit" value="Add" id="submit" phx_disable_with="Sending..." />
   </form>
+ -->
 </div>
 <div id="habits">
   <div :for={habit <- @habits}>
@@ -60,11 +75,21 @@
             phx-value-habit={habit}
           />
         </div>
+        <.form :if={assigns.open_option == habit} for={@form} phx-submit="add-option">
+          <.input
+            type="text"
+            field={@form[:questions]}
+            placeholder="Add option"
+            name="habit"
+            autocomplete="off"
+            id="option-input"
+          />
+        </.form>
         <form :if={assigns.open_option == habit} action="#" phx-submit="add-option">
           <input type="text" placeholder="Add option" name="option" id="option-input" />
           <input type="hidden" name="habit" value={habit} />
         </form>
-        <.link :if={habit in @questions} href={~p"/habits/#{habit}"} id="chart-link">
+        <.link :if={habit in Map.keys(@opts_map)} href={~p"/habits/#{habit}"} id="chart-link">
           chart
         </.link>
       </div>

@@ -173,7 +173,7 @@ div > div {
   box-shadow: 0 0 0.5rem rgba(72, 165, 205, 0.3);
 }
 
-.text-input {
+#text-input {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: large;
   color: white;

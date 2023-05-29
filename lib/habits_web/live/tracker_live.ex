@@ -2,10 +2,13 @@ defmodule HabitsWeb.TrackerLive do
   use HabitsWeb, :live_view
 
   alias Habits.Tracker
+  alias Habits.Tracker.Day
 
   def mount(_params, _session, socket) do
     today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
     days = Tracker.list_days()
+
+    changeset = Tracker.change_day(%Day{})
 
     most_recent_day =
       case days do
@@ -24,16 +27,17 @@ defmodule HabitsWeb.TrackerLive do
         new: false,
         open_option: false,
         date: today,
-        questions: questions
+        questions: questions,
+        form: to_form(changeset)
       )
 
     {:ok, socket}
   end
 
   # Travelling in time is available.
-  def handle_event("yesterday", _, socket), do: change_day(-1, socket)
+  def handle_event("yesterday", _, socket), do: travel_day(-1, socket)
 
-  def handle_event("tomorrow", _, socket), do: change_day(1, socket)
+  def handle_event("tomorrow", _, socket), do: travel_day(1, socket)
 
   # Saves changes
   def handle_event("save", _, socket) do
@@ -103,6 +107,7 @@ defmodule HabitsWeb.TrackerLive do
       {:noreply,
        socket
        |> clear_flash()
+       |> update(:form, fn _questions -> opts_map end)
        |> update(:habits, &[habit | &1])
        |> assign(:opts_map, opts_map)
        |> assign(:new, false)}
@@ -118,22 +123,24 @@ defmodule HabitsWeb.TrackerLive do
   end
 
   def handle_event("open-option", %{"habit" => habit}, socket) do
-    {:noreply, assign(socket, open_option: habit)}
+    {:noreply, assign(socket, open_option: habit) |> IO.inspect(label: "SOCKET OPTION")}
   end
 
   def handle_event("add-option", %{"option" => option, "habit" => habit}, socket) do
     opts_map = add_option(socket, option, habit)
 
-    socket = assign(socket, opts_map: opts_map, open_option: false)
-
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> update(:form, fn _questions -> opts_map end)
+     |> assign(:opts_map, opts_map)
+     |> assign(:open_option, false)}
   end
 
   def handle_info(:clear_flash, socket) do
     {:noreply, clear_flash(socket)}
   end
 
-  defp change_day(value, socket) do
+  defp travel_day(value, socket) do
     days = Tracker.list_days()
 
     case Enum.find(days, &(&1.date == Date.add(socket.assigns.date, value))) do
