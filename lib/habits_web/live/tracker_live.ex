@@ -45,7 +45,11 @@ defmodule HabitsWeb.TrackerLive do
 
     Process.send_after(self(), :clear_flash, 2000)
     days = Tracker.list_days()
-    questions = Enum.map(days, fn day -> Map.keys(day.questions) end) |> List.flatten()
+
+    questions =
+      Enum.map(days, fn day -> Map.keys(day.questions) end)
+      |> List.flatten()
+      |> Enum.uniq()
 
     {:noreply,
      put_flash(
@@ -141,9 +145,9 @@ defmodule HabitsWeb.TrackerLive do
   end
 
   defp travel_day(value, socket) do
-    days = Tracker.list_days()
+    date = Date.add(socket.assigns.date, value)
 
-    case Enum.find(days, &(&1.date == Date.add(socket.assigns.date, value))) do
+    case Tracker.get_day_by_date(date) do
       # If the day is not in the database, it will display the current habit-options unsaved.
       nil ->
         {:noreply, update(socket, :date, &Date.add(&1, value))}
@@ -204,9 +208,7 @@ defmodule HabitsWeb.TrackerLive do
   - Else it updates changes.
   """
   def create_or_update(opts_map, date) do
-    days = Tracker.list_days()
-
-    case Enum.find(days, &(&1.date == date)) do
+    case Tracker.get_day_by_date(date) do
       nil -> Tracker.create_day(%{questions: opts_map, date: date})
       day -> Tracker.update_day(day, %{questions: opts_map})
     end
