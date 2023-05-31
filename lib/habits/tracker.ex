@@ -21,11 +21,42 @@ defmodule Habits.Tracker do
     Repo.all(Day)
   end
 
+  # Lists merged map of %{habit => options}.
   def list_all_opts_maps do
     query = from day in Day, select: day.questions
 
     Repo.all(query)
-    |> Enum.reduce(%{}, fn day, acc -> Map.merge(day, acc) end)
+    |> Enum.reduce(%{}, fn opts_map, acc ->
+      Map.merge(opts_map, acc, fn _k, v1, v2 -> v1 ++ v2 end)
+    end)
+  end
+
+  @doc """
+  # Gets habits that have integers as options.
+  # We are going to ignore if there is a non_integer option that was never selected.
+
+  ## Examples
+
+    iex> list_all_opts_maps()
+    %{habit1 => ["Yes", "No"], habit2 => ["1", "2", "3"], habit3 => ["1", "2"], habit4 => ["Yes", "1"]}
+
+    iex> list_all_habits()
+    [habit1, habit2, habit3, habit4]
+
+    iex> list_num_habits()
+    [habit2, habit3]
+  """
+  def list_num_habits() do
+    list_all_opts_maps()
+    |> Map.keys()
+    |> Enum.filter(fn habit -> all_num_options?(habit) end)
+  end
+
+  defp all_num_options?(habit) do
+    list_days()
+    |> Enum.filter(fn day -> habit in Map.keys(day.questions) end)
+    |> Enum.map(fn day -> hd(day.questions[habit]) end)
+    |> Enum.all?(&String.match?(&1, ~r/^\d+$/))
   end
 
   def get_day_by_date([]), do: create_day()

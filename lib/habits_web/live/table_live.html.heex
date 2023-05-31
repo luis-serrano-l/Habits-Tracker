@@ -14,22 +14,22 @@
     <tr :for={habit <- @habit_list}>
       <td><%= habit %></td>
       <td>
-        <%= calculate_value(:avg, habit in @nums_habits, habit, @days) %>
+        <%= calculate_value(:avg, habit in @nums_habits, habit) %>
       </td>
       <td>
-        <%= calculate_value(:min, habit in @nums_habits, habit, @days) %>
+        <%= calculate_value(:min, habit in @nums_habits, habit) %>
       </td>
       <td>
-        <%= calculate_value(:max, habit in @nums_habits, habit, @days) %>
+        <%= calculate_value(:max, habit in @nums_habits, habit) %>
       </td>
       <td>
-        <%= get_value(:most, records(habit, @days)) %>
+        <%= get_value(:most, habit) %>
       </td>
       <td>
-        <%= get_value(:least, records(habit, @days)) %>
+        <%= get_value(:least, habit) %>
       </td>
       <td>
-        <%= get_value(:times, records(habit, @days)) %>
+        <%= get_value(:times, habit) %>
       </td>
     </tr>
   </tbody>

@@ -61,21 +61,8 @@ defmodule HabitsWeb.TrackerLive do
   Changes need to be saved.
   """
   def handle_event("select", %{"value" => option, "habit" => habit}, socket) do
-    opts_map =
-      Map.update(
-        socket.assigns.current_day.questions,
-        habit,
-        [],
-        &[option | List.delete(&1, option)]
-      )
-
     current_day =
-      Map.update(
-        socket.assigns.current_day,
-        :questions,
-        %{},
-        fn _ -> opts_map end
-      )
+      do_update_in(socket.assigns.current_day, habit, &[option | List.delete(&1, option)])
 
     {:noreply,
      socket
@@ -109,7 +96,7 @@ defmodule HabitsWeb.TrackerLive do
       {:noreply, put_flash(socket, :error, "Already existing habit")}
     else
       opts_map =
-        Map.update(socket.assigns.current_day.questions, habit, exists_or_default(habit), & &1)
+        Map.update(socket.assigns.current_day.questions, habit, existing_or_default(habit), & &1)
 
       {:ok, current_day} = Tracker.update_day(socket.assigns.current_day, %{questions: opts_map})
 
@@ -124,12 +111,9 @@ defmodule HabitsWeb.TrackerLive do
   end
 
   def handle_event("reset-options", %{"habit" => habit}, socket) do
-    opts_map = clear_options(socket, habit)
-    current_day = Map.update(socket.assigns.current_day, :questions, %{}, fn _ -> opts_map end)
+    current_day = do_update_in(socket.assigns.current_day, habit, fn _ -> [] end)
 
-    socket = assign(socket, current_day: current_day, open_option: false)
-
-    {:noreply, socket}
+    {:noreply, assign(socket, current_day: current_day, open_option: false)}
   end
 
   def handle_event("open-option", %{"habit" => habit}, socket) do
@@ -137,12 +121,10 @@ defmodule HabitsWeb.TrackerLive do
   end
 
   def handle_event("add-option", %{"option" => option, "habit" => habit}, socket) do
-    current_day =
-      update_in(socket.assigns.current_day, [:questions, habit], &Enum.uniq(&1 ++ [option]))
+    current_day = do_update_in(socket.assigns.current_day, habit, &Enum.uniq(&1 ++ [option]))
 
     {:noreply,
      socket
-     |> assign(:form, to_form(%{"new_habit" => "", "new_option" => option}))
      |> assign(:current_day, current_day)
      |> assign(:open_option, false)}
   end
@@ -169,9 +151,15 @@ defmodule HabitsWeb.TrackerLive do
     end
   end
 
+  # The Kernel.update_in function does not work because Day doesnt implement the Access behaviour
+  defp do_update_in(current_day, habit, func) do
+    opts_map = Map.update(current_day.questions, habit, [], &func.(&1))
+    Map.update(current_day, :questions, %{}, fn _ -> opts_map end)
+  end
+
   # If a new habit is added and it already existed in the database, it gets the same options,
   # else default.
-  defp exists_or_default(habit) do
+  defp existing_or_default(habit) do
     all_opts_maps = Tracker.list_all_opts_maps()
 
     Map.get(all_opts_maps, habit, @default_options)
@@ -180,11 +168,6 @@ defmodule HabitsWeb.TrackerLive do
   # Displays the options available for a certain habit.
   defp possible_options(assigns, habit) do
     assigns.current_day.questions[habit]
-  end
-
-  # Clears all options.
-  defp clear_options(socket, habit) do
-    Map.replace(socket.assigns.current_day.questions, habit, [])
   end
 
   # - If today is not in the database, it creates the day with the habits.
