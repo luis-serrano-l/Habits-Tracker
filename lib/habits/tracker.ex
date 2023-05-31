@@ -21,6 +21,15 @@ defmodule Habits.Tracker do
     Repo.all(Day)
   end
 
+  def list_all_opts_maps do
+    query = from day in Day, select: day.questions
+
+    Repo.all(query)
+    |> Enum.reduce(%{}, fn day, acc -> Map.merge(day, acc) end)
+  end
+
+  def get_day_by_date([]), do: create_day()
+
   def get_day_by_date(date) do
     from(Day)
     |> where(date: ^date)

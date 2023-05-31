@@ -2,33 +2,32 @@ defmodule HabitsWeb.TrackerLive do
   use HabitsWeb, :live_view
 
   alias Habits.Tracker
-  alias Habits.Tracker.Day
+
+  @default_options ["1", "2", "3", "4", "5"]
 
   def mount(_params, _session, socket) do
     today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
-    days = Tracker.list_days()
 
-    changeset = Tracker.change_day(%Day{})
-
-    most_recent_day =
-      case days do
+    last_day_saved =
+      case Tracker.list_days() do
         [] -> []
         days -> Enum.max_by(days, & &1.date)
       end
 
-    opts_map = create_opts_map(days, today, most_recent_day)
-
-    questions = Enum.map(days, fn day -> Map.keys(day.questions) end) |> List.flatten()
+    current_day =
+      case Tracker.get_day_by_date(today) do
+        nil -> last_day_saved
+        current_day -> current_day
+      end
 
     socket =
       assign(socket,
-        habits: Map.keys(opts_map),
-        opts_map: opts_map,
+        habits: Map.keys(current_day.questions),
         new: false,
         open_option: false,
         date: today,
-        questions: questions,
-        form: to_form(changeset)
+        current_day: current_day,
+        form: to_form(%{"new_habit" => "", "new_option" => ""})
       )
 
     {:ok, socket}
@@ -41,23 +40,16 @@ defmodule HabitsWeb.TrackerLive do
 
   # Saves changes
   def handle_event("save", _, socket) do
-    create_or_update(socket.assigns.opts_map, socket.assigns.date)
+    create_or_update(socket.assigns.current_day.questions, socket.assigns.date)
 
     Process.send_after(self(), :clear_flash, 2000)
-    days = Tracker.list_days()
-
-    questions =
-      Enum.map(days, fn day -> Map.keys(day.questions) end)
-      |> List.flatten()
-      |> Enum.uniq()
 
     {:noreply,
      put_flash(
        socket,
        :info,
        "Progress saved. Remember your habits will lead you to your goals!"
-     )
-     |> assign(:questions, questions)}
+     )}
   end
 
   @doc """
@@ -71,15 +63,23 @@ defmodule HabitsWeb.TrackerLive do
   def handle_event("select", %{"value" => option, "habit" => habit}, socket) do
     opts_map =
       Map.update(
-        socket.assigns.opts_map,
+        socket.assigns.current_day.questions,
         habit,
         [],
         &[option | List.delete(&1, option)]
       )
 
+    current_day =
+      Map.update(
+        socket.assigns.current_day,
+        :questions,
+        %{},
+        fn _ -> opts_map end
+      )
+
     {:noreply,
      socket
-     |> assign(opts_map: opts_map)
+     |> assign(current_day: current_day)
      |> assign(open_option: false)}
   end
 
@@ -87,13 +87,15 @@ defmodule HabitsWeb.TrackerLive do
     habits = List.delete(socket.assigns.habits, habit)
 
     opts_map =
-      socket.assigns.opts_map
+      socket.assigns.current_day.questions
       |> Map.delete(habit)
+
+    {:ok, current_day} = Tracker.update_day(socket.assigns.current_day, %{questions: opts_map})
 
     {:noreply,
      socket
      |> assign(habits: habits)
-     |> assign(opts_map: opts_map)
+     |> assign(current_day: current_day)
      |> assign(open_option: false)}
   end
 
@@ -106,37 +108,42 @@ defmodule HabitsWeb.TrackerLive do
       Process.send_after(self(), :clear_flash, 900)
       {:noreply, put_flash(socket, :error, "Already existing habit")}
     else
-      opts_map = Map.update(socket.assigns.opts_map, habit, ["1", "2", "3", "4", "5"], & &1)
+      opts_map =
+        Map.update(socket.assigns.current_day.questions, habit, exists_or_default(habit), & &1)
+
+      {:ok, current_day} = Tracker.update_day(socket.assigns.current_day, %{questions: opts_map})
 
       {:noreply,
        socket
        |> clear_flash()
-       |> update(:form, fn _questions -> opts_map end)
+       |> assign(:form, to_form(%{"new_habit" => habit, "new_option" => ""}))
        |> update(:habits, &[habit | &1])
-       |> assign(:opts_map, opts_map)
+       |> assign(:current_day, current_day)
        |> assign(:new, false)}
     end
   end
 
   def handle_event("reset-options", %{"habit" => habit}, socket) do
     opts_map = clear_options(socket, habit)
+    current_day = Map.update(socket.assigns.current_day, :questions, %{}, fn _ -> opts_map end)
 
-    socket = assign(socket, opts_map: opts_map, open_option: false)
+    socket = assign(socket, current_day: current_day, open_option: false)
 
     {:noreply, socket}
   end
 
   def handle_event("open-option", %{"habit" => habit}, socket) do
-    {:noreply, assign(socket, open_option: habit) |> IO.inspect(label: "SOCKET OPTION")}
+    {:noreply, assign(socket, open_option: habit)}
   end
 
   def handle_event("add-option", %{"option" => option, "habit" => habit}, socket) do
-    opts_map = add_option(socket, option, habit)
+    current_day =
+      update_in(socket.assigns.current_day, [:questions, habit], &Enum.uniq(&1 ++ [option]))
 
     {:noreply,
      socket
-     |> update(:form, fn _questions -> opts_map end)
-     |> assign(:opts_map, opts_map)
+     |> assign(:form, to_form(%{"new_habit" => "", "new_option" => option}))
+     |> assign(:current_day, current_day)
      |> assign(:open_option, false)}
   end
 
@@ -157,57 +164,32 @@ defmodule HabitsWeb.TrackerLive do
         {:noreply,
          socket
          |> update(:date, &Date.add(&1, value))
-         |> assign(:opts_map, day.questions)
+         |> assign(:current_day, day)
          |> assign(:habits, Map.keys(day.questions))}
     end
   end
 
-  @doc """
-  - Creates today's habit map. It has the habits and the list of options for each habit.
-  - The first option in the list is the one that is picked by default.
-  - If today hasn't been saved yet, it displays the habits and options of the last day saved.
+  # If a new habit is added and it already existed in the database, it gets the same options,
+  # else default.
+  defp exists_or_default(habit) do
+    all_opts_maps = Tracker.list_all_opts_maps()
 
-  opts_map => %{
-    "How are you feeling today?" => ["1", "2", "3", "4", "5"],
-    "Did you wake up early?" => ["Yes", "No"]
-  }
-  Later, if we pick a different option, it will become the first in the list.
-  """
-  @spec create_opts_map(days :: list(map), today :: map, most_recent_day :: map) :: map
-  def create_opts_map(_, _, []), do: %{}
-
-  def create_opts_map(days, today, most_recent_day) do
-    case Enum.find(days, &(&1.date == today)) do
-      nil -> most_recent_day.questions
-      day -> day.questions
-    end
+    Map.get(all_opts_maps, habit, @default_options)
   end
 
   # Displays the options available for a certain habit.
-  defp possible_answers(assigns, habit) do
-    assigns.opts_map[habit]
-  end
-
-  # Adds an option to chose for a habit.
-  defp add_option(socket, option, habit) do
-    Map.update(
-      socket.assigns.opts_map,
-      habit,
-      "",
-      &Enum.uniq(&1 ++ [option])
-    )
+  defp possible_options(assigns, habit) do
+    assigns.current_day.questions[habit]
   end
 
   # Clears all options.
   defp clear_options(socket, habit) do
-    Map.replace(socket.assigns.opts_map, habit, [])
+    Map.replace(socket.assigns.current_day.questions, habit, [])
   end
 
-  @doc """
-  - If today is not in the database, it creates the day with the habits.
-  - Else it updates changes.
-  """
-  def create_or_update(opts_map, date) do
+  # - If today is not in the database, it creates the day with the habits.
+  # - Else it updates changes.
+  defp create_or_update(opts_map, date) do
     case Tracker.get_day_by_date(date) do
       nil -> Tracker.create_day(%{questions: opts_map, date: date})
       day -> Tracker.update_day(day, %{questions: opts_map})
