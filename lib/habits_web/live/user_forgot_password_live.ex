@@ -20,8 +20,8 @@ defmodule HabitsWeb.UserForgotPasswordLive do
         </:actions>
       </.simple_form>
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/users/register"} id="user-link">Register</.link>
+        | <.link href={~p"/users/log_in"} id="user-link">Log in</.link>
       </p>
     </div>
     """
