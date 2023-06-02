@@ -4,10 +4,10 @@ defmodule HabitsWeb.TableLive do
 
   def mount(_params, _session, socket) do
     # All habits ever tracked
-    habit_list = Map.keys(Tracker.list_all_opts_maps())
+    habit_list = Map.keys(Tracker.all_opts_maps())
 
     # Habits that have numbers as options and we can operate with them.
-    nums_habits = Tracker.list_num_habits()
+    nums_habits = Tracker.num_habits()
 
     {:ok, assign(socket, habit_list: habit_list, nums_habits: nums_habits)}
   end
@@ -42,7 +42,7 @@ defmodule HabitsWeb.TableLive do
     records = records(habit)
 
     unselected_map =
-      (Enum.uniq(Tracker.list_all_opts_maps()[habit]) -- records)
+      (Enum.uniq(Tracker.all_opts_maps()[habit]) -- records)
       |> Enum.reduce(%{}, fn key, acc -> Map.merge(%{key => 0}, acc) end)
 
     freq_map =
