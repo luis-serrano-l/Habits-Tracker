@@ -12,7 +12,11 @@
   </head>
   <tbody>
     <tr :for={habit <- @habit_list}>
-      <td><%= habit %></td>
+      <td>
+        <.link href={~p"/habits/#{habit}"} id="habit-link">
+          <%= habit %>
+        </.link>
+      </td>
       <td>
         <%= calculate_value(:avg, habit in @nums_habits, habit) %>
       </td>

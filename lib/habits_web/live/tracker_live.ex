@@ -2,11 +2,13 @@ defmodule HabitsWeb.TrackerLive do
   use HabitsWeb, :live_view
 
   alias Habits.Tracker
+  alias Habits.Accounts
 
   @default_options ["1", "2", "3", "4", "5"]
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
+    user = Accounts.get_user_by_session_token(session["user_token"])
 
     last_day_saved =
       case Tracker.list_days() do
@@ -27,7 +29,8 @@ defmodule HabitsWeb.TrackerLive do
         open_option: false,
         date: today,
         current_day: current_day,
-        form: to_form(%{"new_habit" => "", "new_option" => ""})
+        form: to_form(%{"new_habit" => "", "new_option" => ""}),
+        current_user: user
       )
 
     {:ok, socket}
@@ -160,7 +163,7 @@ defmodule HabitsWeb.TrackerLive do
   # If a new habit is added and it already existed in the database, it gets the same options,
   # else default.
   defp existing_or_default(habit) do
-    all_opts_maps = Tracker.list_all_opts_maps()
+    all_opts_maps = Tracker.all_opts_maps()
 
     Map.get(all_opts_maps, habit, @default_options)
   end

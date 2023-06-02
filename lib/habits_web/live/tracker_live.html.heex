@@ -1,8 +1,21 @@
 <h1>My habits for happiness</h1>
-<div id="table-link">
+<div id="corner-links">
   <.link navigate={~p"/table"} id="table-link">
     TABLE
   </.link>
+  <div id="user-box">
+    <.link
+      href={~p"/users/log_out"}
+      id="user-link"
+      method="delete"
+      class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+    >
+      Log out
+    </.link>
+    <p>
+      <%= hd(String.split(@current_user.email, "@")) %>
+    </p>
+  </div>
 </div>
 <div id="date-block">
   <div id="date">
@@ -36,7 +49,7 @@
 <div id="habits">
   <div :for={habit <- @habits}>
     <div class="habit">
-      <span><%= habit %></span>
+      <span id="habit-name"><%= habit %></span>
       <div class="habit-options" id="option-box">
         <div id="chart-option">
           <div>
