@@ -5,6 +5,16 @@
   </.link>
   <div id="user-box">
     <.link
+      href={~p"/users/settings"}
+      class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+      id="user-link"
+    >
+      Settings
+    </.link>
+    <p>
+      <%= hd(String.split(@current_user.email, "@")) %>
+    </p>
+    <.link
       href={~p"/users/log_out"}
       id="user-link"
       method="delete"
@@ -12,9 +22,6 @@
     >
       Log out
     </.link>
-    <p>
-      <%= hd(String.split(@current_user.email, "@")) %>
-    </p>
   </div>
 </div>
 <div id="date-block">
