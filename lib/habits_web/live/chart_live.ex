@@ -12,11 +12,8 @@ defmodule HabitsWeb.ChartLive do
     days = Tracker.list_days()
 
     options =
-      days
-      |> Enum.filter(fn day -> habit in Map.keys(day.questions) end)
-      |> List.last()
-      |> Map.get(:questions)
-      |> Map.get(habit)
+      Tracker.all_opts_maps()[habit]
+      |> Enum.uniq()
       |> Enum.sort(:desc)
 
     {:noreply, assign(socket, days: days, habit: habit, options: options)}

@@ -22,7 +22,7 @@ defmodule Habits.Tracker do
   end
 
   # Lists merged map of %{habit => options}.
-  def list_all_opts_maps do
+  def all_opts_maps do
     query = from day in Day, select: day.questions
 
     Repo.all(query)
@@ -37,17 +37,17 @@ defmodule Habits.Tracker do
 
   ## Examples
 
-    iex> list_all_opts_maps()
+    iex> all_opts_maps()
     %{habit1 => ["Yes", "No"], habit2 => ["1", "2", "3"], habit3 => ["1", "2"], habit4 => ["Yes", "1"]}
 
     iex> list_all_habits()
     [habit1, habit2, habit3, habit4]
 
-    iex> list_num_habits()
+    iex> num_habits()
     [habit2, habit3]
   """
-  def list_num_habits() do
-    list_all_opts_maps()
+  def num_habits() do
+    all_opts_maps()
     |> Map.keys()
     |> Enum.filter(fn habit -> all_num_options?(habit) end)
   end
