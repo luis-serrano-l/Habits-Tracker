@@ -132,14 +132,9 @@ h1 {
   border-radius: 7px;
 }
 
-<<<<<<< HEAD
-#login_form {
-  text-align: center;
-=======
 #login_form, #reset_password_form {
   display: flex;
   justify-content: center;
->>>>>>> main
 }
 
 p {
@@ -194,17 +189,11 @@ table {
 #table-link {
   color: white;
   margin-right: 5em;
-<<<<<<< HEAD
-}
-
-p {
-=======
   margin-top: 1em;
 }
 
 p {
   color: white;
->>>>>>> main
   margin: 0;
   margin-top: 0.3em;
 }
@@ -214,16 +203,12 @@ p {
   justify-content: end;
   position: absolute;
   right: 7%;
-<<<<<<< HEAD
-  top: 7%;
-=======
   top: 3%;
 }
 
 #settings{
   display: flex;
   justify-content: space-evenly;
->>>>>>> main
 }
 
 #user-box {
