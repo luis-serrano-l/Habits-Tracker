@@ -4,7 +4,7 @@ import Config
 config :habits, Habits.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: "postgres",
   database: "habits_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
