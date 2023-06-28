@@ -4,15 +4,17 @@ defmodule Habits.Tracker.Day do
 
   schema "days" do
     field :date, :date
-    field :questions, {:map, {:array, :string}}
+    # field :questions, {:map, {:array, :string}}
 
     timestamps()
+
+    belongs_to :user_tokens, Habits.Accounts.UserToken
+    has_many :daily_habits, Habits.Tracker.DailyHabit
   end
 
-  @doc false
   def changeset(day, attrs) do
     day
-    |> cast(attrs, [:questions, :date])
-    |> validate_required([:questions, :date])
+    |> cast(attrs, [:date])
+    |> validate_required([:date])
   end
 end

@@ -46,7 +46,7 @@ let Hooks = {
     mounted() { 
       console.log("RenderChart")
       console.log(this.el)
-      eval(this.el.getElementsByTagName("script")[0].innerHTML)
+      this.el.getElementsByTagName("script")[0].innerHTML
     }
   }
 }

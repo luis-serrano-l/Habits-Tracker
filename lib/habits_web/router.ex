@@ -20,9 +20,7 @@ defmodule HabitsWeb.Router do
   scope "/", HabitsWeb do
     pipe_through :browser
 
-    # get "/", PageController, :home
-
-    live "/", RedirectLive
+    get "/", PageController, :home
   end
 
   # Other scopes may use custom stacks.
