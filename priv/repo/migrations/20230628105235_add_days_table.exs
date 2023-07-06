@@ -3,10 +3,12 @@ defmodule Habits.Repo.Migrations.AddDaysTable do
 
   def change do
     create table(:days) do
-      add :date, :date
-      add :token, references(:users_tokens), null: false
+      add :date, :date, null: false
+      add :user_id, references(:users, on_delete: :nothing)
 
       timestamps()
     end
+
+    create index(:days, :user_id)
   end
 end

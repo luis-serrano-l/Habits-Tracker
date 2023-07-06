@@ -21,8 +21,6 @@ defmodule Habits.Accounts.UserToken do
     timestamps(updated_at: false)
 
     belongs_to :user, Habits.Accounts.User
-    has_many :days, Habits.Tracker.Day, foreign_key: :token
-    has_many :daily_habits, through: [:days, :daily_habits]
   end
 
   @doc """

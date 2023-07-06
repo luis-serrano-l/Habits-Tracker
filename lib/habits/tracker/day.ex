@@ -2,14 +2,16 @@ defmodule Habits.Tracker.Day do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Habits.Accounts.User
+  alias Habits.Tracker.DailyHabit
+
   schema "days" do
-    field :date, :date
-    # field :questions, {:map, {:array, :string}}
+    field(:date, :date)
 
     timestamps()
 
-    belongs_to :user_tokens, Habits.Accounts.UserToken
-    has_many :daily_habits, Habits.Tracker.DailyHabit
+    has_many(:daily_habits, DailyHabit, on_replace: :nilify)
+    belongs_to(:user, User)
   end
 
   def changeset(day, attrs) do

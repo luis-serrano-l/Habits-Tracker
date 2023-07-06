@@ -18,22 +18,22 @@
         </.link>
       </td>
       <td>
-        <%= calculate_value(:avg, habit in @nums_habits, habit) %>
+        <%= calculate_value(:avg, habit in @nums_habits, habit, @habit_choices_tuples) %>
       </td>
       <td>
-        <%= calculate_value(:min, habit in @nums_habits, habit) %>
+        <%= calculate_value(:min, habit in @nums_habits, habit, @habit_choices_tuples) %>
       </td>
       <td>
-        <%= calculate_value(:max, habit in @nums_habits, habit) %>
+        <%= calculate_value(:max, habit in @nums_habits, habit, @habit_choices_tuples) %>
       </td>
       <td>
-        <%= get_value(:most, habit) %>
+        <%= get_value(:most, habit, @habit_choices_tuples) %>
       </td>
       <td>
-        <%= get_value(:least, habit) %>
+        <%= get_value(:least, habit, @habit_choices_tuples, @user_id) %>
       </td>
       <td>
-        <%= get_value(:times, habit) %>
+        <%= get_value(:times, habit, @habit_choices_tuples) %>
       </td>
     </tr>
   </tbody>

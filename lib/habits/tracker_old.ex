@@ -1,4 +1,4 @@
-defmodule Habits.Tracker do
+defmodule Habits.Trackers do
   @moduledoc """
   The Tracker context.
   """
