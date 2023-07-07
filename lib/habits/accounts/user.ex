@@ -1,6 +1,7 @@
 defmodule Habits.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Habits.Tracker.Day
 
   schema "users" do
     field :email, :string
@@ -9,6 +10,9 @@ defmodule Habits.Accounts.User do
     field :confirmed_at, :naive_datetime
 
     timestamps()
+
+    has_many :days, Day, on_replace: :delete
+    has_many :daily_habits, through: [:days, :daily_habits]
   end
 
   @doc """

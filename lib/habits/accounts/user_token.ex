@@ -17,9 +17,10 @@ defmodule Habits.Accounts.UserToken do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
-    belongs_to :user, Habits.Accounts.User
 
     timestamps(updated_at: false)
+
+    belongs_to :user, Habits.Accounts.User
   end
 
   @doc """

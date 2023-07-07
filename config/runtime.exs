@@ -63,6 +63,8 @@ if config_env() == :prod do
     ],
     secret_key_base: "7ir9TYGs7o8EwVkzuSFjV4d4xgYh7bTGKgmQ53WOzsvNWgGM7p3iX0MsSjNp6Ymh"
 
+  # "7ir9TYGs7o8EwVkzuSFjV4d4xgYh7bTGKgmQ53WOzsvNWgGM7p3iX0MsSjNp6Ymh"
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

@@ -2,17 +2,21 @@ defmodule Habits.Tracker.Day do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Habits.Accounts.User
+  alias Habits.Tracker.DailyHabit
+
   schema "days" do
-    field :date, :date
-    field :questions, {:map, {:array, :string}}
+    field(:date, :date)
 
     timestamps()
+
+    has_many(:daily_habits, DailyHabit, on_replace: :nilify)
+    belongs_to(:user, User)
   end
 
-  @doc false
   def changeset(day, attrs) do
     day
-    |> cast(attrs, [:questions, :date])
-    |> validate_required([:questions, :date])
+    |> cast(attrs, [:date])
+    |> validate_required([:date])
   end
 end

@@ -4,147 +4,185 @@ defmodule Habits.Tracker do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Habits.Repo
+  alias Habits.Accounts.User
+  alias Habits.Tracker.DailyHabit
 
-  alias Habits.Tracker.Day
+  def list_dates(user_id) do
+    dates =
+      from user in User,
+        where: user.id == ^user_id,
+        join: day in assoc(user, :days),
+        select: day.date
 
-  @doc """
-  Returns the list of days.
-
-  ## Examples
-
-      iex> list_days()
-      [%Day{}, ...]
-
-  """
-  def list_days do
-    Repo.all(Day)
+    Repo.all(dates)
   end
 
-  # Lists merged map of %{habit => options}.
-  def all_opts_maps do
-    query = from day in Day, select: day.questions
+  def get_habit_options(user_id, habit, default) do
+    options =
+      from user in User,
+        where: user.id == ^user_id,
+        join: daily_habit in assoc(user, :daily_habits),
+        where: daily_habit.name == ^habit,
+        select: daily_habit.options,
+        limit: 1
+
+    case Repo.one(options) do
+      nil -> default
+      options -> options
+    end
+  end
+
+  def get_last_options(user_id, habit) do
+    query =
+      from user in User,
+        where: user.id == ^user_id,
+        join: day in assoc(user, :days),
+        order_by: [desc: day.date],
+        join: daily_habit in assoc(day, :daily_habits),
+        where: daily_habit.name == ^habit,
+        select: daily_habit.options,
+        limit: 1
+
+    Repo.one(query)
+  end
+
+  def list_daily_habits(user_id, date) do
+    dates = list_dates(user_id)
+
+    case {dates, date in dates} do
+      {[], false} ->
+        []
+
+      {dates, false} ->
+        get_daily_habits(user_id, Enum.max(dates))
+
+      _ ->
+        get_daily_habits(user_id, date)
+    end
+  end
+
+  def list_habits(user_id) do
+    query =
+      from user in User,
+        where: user.id == ^user_id,
+        join: daily_habit in assoc(user, :daily_habits),
+        select: daily_habit.name,
+        distinct: true
 
     Repo.all(query)
-    |> Enum.reduce(%{}, fn opts_map, acc ->
-      Map.merge(opts_map, acc, fn _k, v1, v2 -> v1 ++ v2 end)
+  end
+
+  def create_or_update(user_id, date, daily_habits) do
+    daily_habits_list = convert_daily_habits(daily_habits)
+
+    if date in list_dates(user_id) do
+      update_daily_habits(user_id, date, daily_habits_list)
+    else
+      create_daily_habits(user_id, date, daily_habits_list)
+    end
+  end
+
+  defp update_daily_habits(user_id, date, daily_habits_list) do
+    current_day = day_daily_habits_schema(user_id, date)
+
+    habit_id_tuples = get_id_tuple_list(current_day.daily_habits)
+
+    params = %{
+      "daily_habits" =>
+        Enum.map(daily_habits_list, fn %{name: name, choice: choice, options: options} ->
+          case List.keyfind(habit_id_tuples, name, 0) do
+            # New habit. The id will be created at insert
+            nil ->
+              %{
+                "name" => name,
+                "choice" => choice,
+                "options" => options
+              }
+
+            # Existing habit
+            {name, id} ->
+              %{
+                "name" => name,
+                "id" => id,
+                "choice" => choice,
+                "options" => options
+              }
+          end
+        end)
+    }
+
+    changeset =
+      current_day
+      |> cast(params, [])
+      |> cast_assoc(:daily_habits)
+
+    Repo.update(changeset)
+  end
+
+  defp create_daily_habits(user_id, date, daily_habits_list) do
+    # Create
+    user = Repo.one(from user in User, where: user.id == ^user_id)
+
+    new_day = Ecto.build_assoc(user, :days, date: date, daily_habits: daily_habits_list)
+
+    Repo.insert(new_day)
+  end
+
+  def habit_choices(user_id, habit) do
+    query =
+      from user in User,
+        where: user.id == ^user_id,
+        join: daily_habit in assoc(user, :daily_habits),
+        where: daily_habit.name == ^habit,
+        select: daily_habit.choice
+
+    Repo.all(query)
+  end
+
+  def date_choice_array(user_id, habit) do
+    query =
+      from user in User,
+        where: user.id == ^user_id,
+        join: day in assoc(user, :days),
+        join: daily_habit in assoc(day, :daily_habits),
+        where: daily_habit.name == ^habit,
+        select: [day.date, daily_habit.choice]
+
+    Repo.all(query)
+  end
+
+  defp get_id_tuple_list(daily_habits) do
+    daily_habits
+    |> Enum.map(&{&1.name, &1.id})
+  end
+
+  # [{habit0, options0}, {habit1, options1}] =>
+  #
+  # [%DailyHabit{name: habit0, options: options0}, %DailyHabit{name: habit1, options: options1}]
+  defp convert_daily_habits(daily_habits) do
+    daily_habits
+    |> Enum.map(fn {habit, options} ->
+      %DailyHabit{name: habit, options: options, choice: hd(options)}
     end)
   end
 
-  @doc """
-  # Gets habits that have integers as options.
-  # We are going to ignore if there is a non_integer option that was never selected.
-
-  ## Examples
-
-    iex> all_opts_maps()
-    %{habit1 => ["Yes", "No"], habit2 => ["1", "2", "3"], habit3 => ["1", "2"], habit4 => ["Yes", "1"]}
-
-    iex> list_all_habits()
-    [habit1, habit2, habit3, habit4]
-
-    iex> num_habits()
-    [habit2, habit3]
-  """
-  def num_habits() do
-    all_opts_maps()
-    |> Map.keys()
-    |> Enum.filter(fn habit -> all_num_options?(habit) end)
+  defp get_daily_habits(user_id, date) do
+    day_daily_habits_schema(user_id, date)
+    |> Map.get(:daily_habits)
+    |> Enum.map(&{&1.name, &1.options})
   end
 
-  defp all_num_options?(habit) do
-    list_days()
-    |> Enum.filter(fn day -> habit in Map.keys(day.questions) end)
-    |> Enum.map(fn day -> hd(day.questions[habit]) end)
-    |> Enum.all?(&String.match?(&1, ~r/^\d+$/))
-  end
+  defp day_daily_habits_schema(user_id, date) do
+    query =
+      from user in User,
+        where: user.id == ^user_id,
+        join: day in assoc(user, :days),
+        where: day.date == ^date,
+        select: day
 
-  def get_day_by_date([]), do: create_day()
-
-  def get_day_by_date(date) do
-    from(Day)
-    |> where(date: ^date)
-    |> Repo.one()
-  end
-
-  @doc """
-  Gets a single day.
-
-  Raises `Ecto.NoResultsError` if the Day does not exist.
-
-  ## Examples
-
-      iex> get_day!(123)
-      %Day{}
-
-      iex> get_day!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_day!(id), do: Repo.get!(Day, id)
-
-  @doc """
-  Creates a day.
-
-  ## Examples
-
-      iex> create_day(%{field: value})
-      {:ok, %Day{}}
-
-      iex> create_day(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_day(attrs \\ %{}) do
-    %Day{}
-    |> Day.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a day.
-
-  ## Examples
-
-      iex> update_day(day, %{field: new_value})
-      {:ok, %Day{}}
-
-      iex> update_day(day, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_day(%Day{} = day, attrs) do
-    day
-    |> Day.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a day.
-
-  ## Examples
-
-      iex> delete_day(day)
-      {:ok, %Day{}}
-
-      iex> delete_day(day)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_day(%Day{} = day) do
-    Repo.delete(day)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking day changes.
-
-  ## Examples
-
-      iex> change_day(day)
-      %Ecto.Changeset{data: %Day{}}
-
-  """
-  def change_day(%Day{} = day, attrs \\ %{}) do
-    Day.changeset(day, attrs)
+    Repo.one(query)
+    |> Repo.preload(:daily_habits)
   end
 end

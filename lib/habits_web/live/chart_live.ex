@@ -2,69 +2,55 @@ defmodule HabitsWeb.ChartLive do
   use HabitsWeb, :live_view
 
   alias Habits.Tracker
+  alias Habits.Accounts
 
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(_params, session, socket) do
+    user_id = Accounts.get_user_by_session_token(session["user_token"]).id
+    {:ok, assign(socket, user_id: user_id)}
   end
 
   # Assigns the habit that will be shown in the chart.
   def handle_params(%{"habit" => habit}, _uri, socket) do
-    days = Tracker.list_days()
-
     options =
-      Tracker.all_opts_maps()[habit]
-      |> Enum.uniq()
-      |> Enum.sort(:desc)
+      Tracker.get_last_options(socket.assigns.user_id, habit)
+      |> Enum.sort()
 
-    {:noreply, assign(socket, days: days, habit: habit, options: options)}
+    options_with_index = options |> Enum.with_index()
+    date_choice_array = Tracker.date_choice_array(socket.assigns.user_id, habit)
+
+    chart_data =
+      date_choice_array
+      |> Enum.map(fn [date, choice] -> [date, opt_to_num(options_with_index, choice)] end)
+
+    {:noreply,
+     assign(socket, chart_data: chart_data, habit: habit, options: Enum.reverse(options))}
   end
 
   @doc """
   - For a habit renders the html of its chart.
   - The chart shows the option selected in each day that the habit was recorded.
   """
-  @spec habit_to_chart(days :: list(map), habit :: map) :: {:safe, binary}
-  def habit_to_chart(days, habit) do
-    days_to_track =
-      days
-      |> Enum.filter(fn day -> habit in Map.keys(day.questions) end)
-
-    # List of the options that the habit has with the index of each element.
-    # Example => [{"Maybe", 0}, {"No", 1}, {"Yes", 2}]
-    # This will be used to match each option with a number and display it in the chart.
-    options_with_index =
-      List.last(days_to_track).questions[habit]
-      |> Enum.sort()
-      |> Enum.with_index()
-
-    # The list matches each day with the option selected that day.
-    # Example => [[~D[2023-05-12], "No"], [~D[2023-05-14], "Yes"]]
-    chart_data =
-      Enum.map(days_to_track, fn day ->
-        [day.date, opt_to_num(options_with_index, hd(day.questions[habit]))]
-      end)
-
+  @spec habit_to_chart(chart_data :: list(list)) :: {:safe, binary}
+  def habit_to_chart(chart_data) do
     chart_data
     |> Jason.encode!()
     |> Chartkick.line_chart()
     |> Phoenix.HTML.raw()
   end
 
-  @doc """
-  - Matches the options of a habit to a number.
-  - Necessary for options that are words.
-  - Wouldn't need it for default.
-  - The number needs to be returned as a string, because it doesn't work with integers.
+  # - Matches the options of a habit to a number.
+  # - Necessary for options that are words.
+  # - Wouldn't need it for default.
+  # - The number needs to be returned as a string, because it doesn't work with integers.
 
-  ## Examples
+  # ## Examples
 
-     iex> opt_to_num([{"No", 0}, {"Yes", 1}], "Yes")
-     "2"
-     iex> opt_to_num([{"1", 0}, {"2", 1}], "1")
-     "1"
-  """
-  @spec opt_to_num(option_index :: list, option :: String.t()) :: binary
-  def opt_to_num(option_index, option) do
+  #    iex> opt_to_num([{"No", 0}, {"Yes", 1}], "Yes")
+  #    "2"
+  #    iex> opt_to_num([{"1", 0}, {"2", 1}], "1")
+  #    "1"
+
+  defp opt_to_num(option_index, option) do
     case for {opt, i} <- option_index, opt == option, do: i + 1 do
       [n] -> to_string(n)
       [] -> "0"

@@ -5,17 +5,18 @@ defmodule Habits.TrackerFixtures do
   """
 
   @doc """
-  Generate a day.
+  Generate a daily_habit.
   """
-  def day_fixture(attrs \\ %{}) do
-    {:ok, day} =
+  def daily_habit_fixture(attrs \\ %{}) do
+    {:ok, daily_habit} =
       attrs
       |> Enum.into(%{
-        date: ~D[2023-05-17],
-        questions: %{}
+        name: "some name",
+        options: ["option1", "option2"],
+        select: "some select"
       })
-      |> Habits.Tracker.create_day()
+      |> Habits.Tracker.create_daily_habit()
 
-    day
+    daily_habit
   end
 end
