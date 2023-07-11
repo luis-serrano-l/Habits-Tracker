@@ -12,7 +12,7 @@ config :habits,
 
 # Configures the endpoint
 config :habits, HabitsWeb.Endpoint,
-  url: [host: "localhost"],
+  http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}],
   render_errors: [
     formats: [html: HabitsWeb.ErrorHTML, json: HabitsWeb.ErrorJSON],
     layout: false

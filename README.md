@@ -12,15 +12,12 @@
 <hr width="88%">
 <img src="https://github.com/luis-serrano-l/Habits-Tracker/assets/98584313/6fea519b-557c-4ea4-8739-b2549428d872" width=87% height=87%>
 <hr width="88%">
-### Don't forget your coffee!
-New and improved functionalities incoming
 
 # Habits
 
-To start your Phoenix server:
+Run docker compose:
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+  * Run `docker compose up --build` to build and run the docker image. 
 
-Now you can visit [`localhost:4000/habits`](http://localhost:4000/habits) from your browser.
+Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
