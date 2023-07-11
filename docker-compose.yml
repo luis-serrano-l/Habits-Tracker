@@ -1,18 +1,20 @@
 version: "3.8"
 services:
   webapp:
-    command: sh -c "/app/entrypoint.sh"
     build: .
-    depends_on:
-      - "postgres"
     environment:
       DATABASE_URL: ecto://postgres:postgres@postgres/habits_db
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       DATABASE_HOST: postgres
-      #DATABASE_PORT: 5434
+    # command: /bin/sh entrypoint.sh
+    command: sh -c "/app/entrypoint.sh"
     ports:
       - "4000:4000"
+    depends_on:
+      - postgres
+    links:
+      - postgres
   postgres:
     image: postgres:15.3
     restart: always
@@ -25,4 +27,4 @@ services:
     volumes:
       - "postgres:/var/lib/postgresql/data"
 volumes:
-  postgres: {} 
+  postgres: {}

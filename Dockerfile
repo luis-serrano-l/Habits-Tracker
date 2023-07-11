@@ -4,8 +4,9 @@ RUN apt-get update && apt-get install -y nodejs
 
 # install hex + rebar
 RUN mix local.hex --force && \
-    mix local.rebar --force && \
-    mix archive.install hex phx_new 1.6.16
+    mix local.rebar --force 
+    # && \
+    #mix archive.install hex phx_new 1.6.16
 
 # set build ENV 
 ENV MIX_ENV="prod"
@@ -20,10 +21,10 @@ WORKDIR /app
 
 RUN mix deps.get
 
-RUN mix compile
-
 RUN mix assets.deploy
+
+RUN mix compile
 
 RUN mix phx.digest
 
-# CMD [ "iex", "-S", "mix", "phx.server" ]
+COPY entrypoint.sh entrypoint.sh
