@@ -161,7 +161,7 @@ defmodule HabitsWeb.TrackerLive do
     end)
   end
 
-  def possible_options(daily_habits, habit) do
-    List.keyfind(daily_habits, habit, 0) |> elem(1)
+  def possible_options(assigns, habit) do
+    List.keyfind(assigns.daily_habits, habit, 0) |> elem(1)
   end
 end
