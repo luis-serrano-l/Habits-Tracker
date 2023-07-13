@@ -4,7 +4,7 @@ import Config
 config :habits, Habits.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "postgres",
+  hostname: "localhost",
   database: "habits_db",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -23,7 +23,6 @@ config :habits, HabitsWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "7ir9TYGs7o8EwVkzuSFjV4d4xgYh7bTGKgmQ53WOzsvNWgGM7p3iX0MsSjNp6Ymh",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}

@@ -6,11 +6,6 @@ RUN apt-get update && apt-get install -y nodejs
 RUN mix local.hex --force && \
     mix local.rebar --force 
 
-# set build ENV 
-ENV MIX_ENV="prod"
-
-ENV DATABASE_URL="ecto://postgres:postgres@postgres/habits_db"
-
 RUN mkdir /app
 
 COPY . /app/

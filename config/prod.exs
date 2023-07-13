@@ -10,7 +10,7 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :habits, HabitsWeb.Endpoint,
-  url: [host: "localhost", port: 4000],
+  url: [host: "example.com", port: 4000],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # server: true

@@ -78,7 +78,6 @@ defmodule Habits.Accounts do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect(label: "USER REGISTER! * * * ")
   end
 
   @doc """

@@ -72,7 +72,6 @@ defmodule HabitsWeb.TrackerLive do
         socket.assigns.daily_habits,
         List.keyfind(socket.assigns.daily_habits, habit, 0)
       )
-      |> IO.inspect(label: "DAILY DELETED")
 
     habits = Enum.map(daily_habits, &elem(&1, 0))
 
