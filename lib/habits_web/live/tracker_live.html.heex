@@ -1,8 +1,5 @@
 <h1>My habits for happiness</h1>
 <div id="corner-links">
-  <.link navigate={~p"/table"} id="table-link">
-    TABLE
-  </.link>
   <div id="user-box">
     <.link
       href={~p"/users/settings"}
@@ -40,6 +37,9 @@
   <button phx-click="save" id="save-btn" phx-disable-with="Saving...">
     Save
   </button>
+  <.link navigate={~p"/table"} id="table-link">
+    TABLE
+  </.link>
 </div>
 <div :if={@new} class="form">
   <.form for={@form} phx-submit="add-habit">
