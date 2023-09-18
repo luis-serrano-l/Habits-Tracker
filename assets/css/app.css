@@ -116,12 +116,13 @@ body {
   line-height: 1.7em;
   margin: 0;
   background-color: #013030;
+  font-size: 90%;
 }
 
 
 /* Style for the header */
 h1 {
-  width: fit-content;
+  width: 40%;
   margin: 1em auto 0.7em;
   font-size: 2em;
   color: #ffffff;
@@ -139,6 +140,7 @@ h1 {
 
 p {
   text-align: center;
+  max-width: 95%;
 }
 
 #user-header {
@@ -146,7 +148,7 @@ p {
 }
 
 #user-link {
-  color: rgb(170, 206, 231);
+  color: rgb(255, 255, 255);
 }
 
 main.container {
@@ -211,9 +213,54 @@ p {
   justify-content: space-evenly;
 }
 
+/*
 #user-box {
   display: flex;
   flex-direction: column;
+}
+*/
+
+/* Styling for Hamburger Icon */
+.menu-icon {
+  cursor: pointer;
+  display: inline-block;
+  padding: 6px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 4px 0;
+}
+
+/* Styling for the entire menu container */
+#menu-container {
+  display: inline-block;
+  position: relative;
+}
+
+/* Styling for the User Box (initially hidden) */
+#user-box {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 0;
+  right: 60%; /* Initially, place it outside the container to the right */
+  top: 60%;
+  background-color: rgb(6, 102, 143);
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1;
+  border-radius: 6px 0 6px 6px;
+  opacity: 0.95;
+}
+
+/* Show the user box when the menu-container is active */
+#menu-container.active #user-box {
+  right: 0; /* Move it to the left of the container */
+  display: block; /* Show the user box */
 }
 
 #table-link {
@@ -278,7 +325,7 @@ select {
   -webkit-appearance: none;
   appearance: none;
   border: none;
-  background: rgb(39, 175, 175) url("data:image/svg+xml;utf8,<svg viewBox='-10 -40 70 140' width='240' height='26' xmlns='http://www.w3.org/2000/svg'><g><path d='m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z' fill='white'/></g></svg>") no-repeat;
+  background: rgb(39, 175, 175) url("data:image/svg+xml;utf8,<svg viewBox='-10 -40 70 140' width='160' height='23' xmlns='http://www.w3.org/2000/svg'><g><path d='m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z' fill='white'/></g></svg>") no-repeat;
   background-position: right 5px top 50%;
 }
 
@@ -307,7 +354,7 @@ select:hover {
 }
 
 #habit-name {
-  padding: 1.6em;
+  padding: 1rem;
 }
 
 /* Style for the submit button */
@@ -332,6 +379,11 @@ button:hover {
   /*background-color: #30a98b;*/
   box-shadow: 0 0 5px rgba(168, 137, 113, 0.4);
   
+}
+
+.fit-button {
+  width: fit-content;
+  max-width: 90%;
 }
 
 label {
@@ -380,10 +432,11 @@ label {
   font-size: medium;
   color: white;
   border-radius: 5px;
-  padding: 0.35em 0.2em;
+  padding: 0.35em 1em;
   width: 6em;
   margin: 0.2em 0;
   background-color: #445959;
+  font-size: 90%;
 }
 
 #option-chart {
@@ -419,6 +472,7 @@ label {
   box-shadow: 0 0 5px rgba(117, 53, 1, 0.4);
   background-color: #077166;
   width: fit-content;
+  font-size: 90%;
 }
 
 #options:hover {
@@ -438,6 +492,7 @@ label {
   padding: 0.5em;
   background-color: #113258;
   width: fit-content;
+  font-size: 90%;
 }
 
 #reset:hover {
@@ -535,6 +590,38 @@ a:hover {
   background-color: #012628;
 }
 
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+input[type="email"],
+input[type="password"] {
+  margin-top: 8px;
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+  border-radius: 15px;
+  margin-bottom: 0.7em;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+#user_email,
+#user_password {
+  border-color: #007bff;
+}
 
 .group {
   background-color: greenyellow;

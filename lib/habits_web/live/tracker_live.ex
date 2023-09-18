@@ -4,7 +4,7 @@ defmodule HabitsWeb.TrackerLive do
   alias Habits.Tracker
   alias Habits.Accounts
 
-  @default_options ["1", "2", "3", "4", "5"]
+  @default_options ["", "Done", "Half done", "Undone"]
 
   def mount(_params, session, socket) do
     today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
@@ -16,10 +16,9 @@ defmodule HabitsWeb.TrackerLive do
       assign(socket,
         habits: habits,
         new: false,
-        open_option: false,
         date: today,
         daily_habits: daily_habits,
-        form: to_form(%{"new_habit" => "", "new_option" => ""}),
+        form: to_form(%{"new_habit" => ""}),
         user_id: user_id
       )
 
@@ -30,6 +29,8 @@ defmodule HabitsWeb.TrackerLive do
   def handle_event("yesterday", _, socket), do: travel_day(-1, socket)
 
   def handle_event("tomorrow", _, socket), do: travel_day(1, socket)
+
+  def handle_event("today", _, socket), do: travel_day(:today, socket)
 
   # Saves changes
   def handle_event("save", _, socket) do
@@ -62,8 +63,7 @@ defmodule HabitsWeb.TrackerLive do
 
     {:noreply,
      socket
-     |> assign(daily_habits: daily_habits)
-     |> assign(open_option: false)}
+     |> assign(daily_habits: daily_habits)}
   end
 
   def handle_event("delete-habit", %{"habit" => habit}, socket) do
@@ -78,8 +78,7 @@ defmodule HabitsWeb.TrackerLive do
     {:noreply,
      socket
      |> assign(habits: habits)
-     |> assign(daily_habits: daily_habits)
-     |> assign(open_option: false)}
+     |> assign(daily_habits: daily_habits)}
   end
 
   def handle_event("new-habit", _, socket) do
@@ -91,41 +90,33 @@ defmodule HabitsWeb.TrackerLive do
       Process.send_after(self(), :clear_flash, 900)
       {:noreply, put_flash(socket, :error, "Already existing habit")}
     else
-      options = Tracker.get_habit_options(socket.assigns.user_id, habit, @default_options)
-      daily_habits = [{habit, options} | socket.assigns.daily_habits]
+      daily_habits = [{habit, @default_options} | socket.assigns.daily_habits]
       habits = Enum.map(daily_habits, &elem(&1, 0))
 
       {:noreply,
        socket
        |> clear_flash()
-       |> assign(:form, to_form(%{"new_habit" => habit, "new_option" => ""}))
+       |> assign(:form, to_form(%{"new_habit" => habit}))
        |> assign(:habits, habits)
        |> assign(:daily_habits, daily_habits)
        |> assign(:new, false)}
     end
   end
 
-  def handle_event("reset-options", %{"habit" => habit}, socket) do
-    daily_habits = update_options(socket.assigns.daily_habits, habit, [])
-
-    {:noreply, assign(socket, daily_habits: daily_habits, open_option: false)}
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 
-  def handle_event("open-option", %{"habit" => habit}, socket) do
-    {:noreply, assign(socket, open_option: habit)}
-  end
-
-  def handle_event("add-option", %{"option" => option, "habit" => habit}, socket) do
-    daily_habits = update_options(socket.assigns.daily_habits, habit, option)
+  defp travel_day(:today, socket) do
+    today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
+    daily_habits = Tracker.list_daily_habits(socket.assigns.user_id, today)
+    habits = Enum.map(daily_habits, fn {habit, _options} -> habit end)
 
     {:noreply,
      socket
+     |> assign(:date, today)
      |> assign(:daily_habits, daily_habits)
-     |> assign(:open_option, false)}
-  end
-
-  def handle_info(:clear_flash, socket) do
-    {:noreply, clear_flash(socket)}
+     |> assign(:habits, habits)}
   end
 
   defp travel_day(value, socket) do
@@ -154,13 +145,12 @@ defmodule HabitsWeb.TrackerLive do
     Enum.map(daily_habits, fn {h, options} ->
       cond do
         h != habit -> {h, options}
-        option == [] -> {h, []}
         true -> {h, Enum.uniq([option | options])}
       end
     end)
   end
 
-  def possible_options(assigns, habit) do
+  def display_options(assigns, habit) do
     List.keyfind(assigns.daily_habits, habit, 0) |> elem(1)
   end
 end

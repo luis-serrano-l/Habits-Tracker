@@ -159,13 +159,6 @@ defmodule Habits.AccountsTest do
       assert "has already been taken" in errors_on(changeset).email
     end
 
-    test "validates current password", %{user: user} do
-      {:error, changeset} =
-        Accounts.apply_user_email(user, "invalid", %{email: unique_user_email()})
-
-      assert %{current_password: ["is not valid"]} = errors_on(changeset)
-    end
-
     test "applies the email without persisting it", %{user: user} do
       email = unique_user_email()
       {:ok, user} = Accounts.apply_user_email(user, valid_user_password(), %{email: email})
@@ -279,13 +272,6 @@ defmodule Habits.AccountsTest do
         Accounts.update_user_password(user, valid_user_password(), %{password: too_long})
 
       assert "should be at most 72 character(s)" in errors_on(changeset).password
-    end
-
-    test "validates current password", %{user: user} do
-      {:error, changeset} =
-        Accounts.update_user_password(user, "invalid", %{password: valid_user_password()})
-
-      assert %{current_password: ["is not valid"]} = errors_on(changeset)
     end
 
     test "updates the password", %{user: user} do

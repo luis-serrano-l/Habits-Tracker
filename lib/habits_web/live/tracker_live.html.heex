@@ -1,33 +1,64 @@
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js">
+  </script>
+  <script>
+    $(document).ready(function() {
+      // Get references to the menu container and user box
+      var $menuContainer = $("#menu-container");
+      var $userBox = $("#user-box");
+
+      // Hide the user box initially
+      $userBox.hide();
+
+      // Toggle the user box visibility when the hamburger icon is clicked
+      $("#hamburger-icon").click(function() {
+        if ($userBox.is(":visible")) {
+          // User box is visible, so hide it
+          $userBox.hide();
+        } else {
+          // User box is hidden, so show it
+          $userBox.show();
+        }
+      });
+    });
+  </script>
+</head>
 <h1>My habits for happiness</h1>
 <div id="corner-links">
-  <div id="user-box">
-    <.link
-      href={~p"/users/settings"}
-      class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-      id="user-link"
-    >
-      Settings
-    </.link>
-    <p>
-      <%= hd(String.split(@current_user.email, "@")) %>
-    </p>
-    <.link
-      href={~p"/users/log_out"}
-      id="user-link"
-      method="delete"
-      class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-    >
-      Log out
-    </.link>
+  <div id="menu-container">
+    <div id="user-box" class="hidden">
+      <.link
+        href={~p"/users/settings"}
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        id="user-link"
+      >
+        Settings
+      </.link>
+      <.link
+        href={~p"/users/log_out"}
+        id="user-link"
+        method="delete"
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+      >
+        Log out
+      </.link>
+    </div>
+    <!-- Hamburger Icon -->
+    <div id="hamburger-icon" class="menu-icon">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
   </div>
 </div>
 <div id="date-block">
   <div id="date">
-    <%= "Today: #{@date}" %>
+    <%= "Date: #{@date}" %>
   </div>
   <div>
-    <button phx-click="yesterday" id="yesterday-btn">Yesterday</button>
-    <button phx-click="tomorrow" id="tomorrow-btn">Tomorrow</button>
+    <button phx-click="yesterday" id="yesterday-btn">Previous</button>
+    <button phx-click="today" id="today-btn">Today</button>
+    <button phx-click="tomorrow" id="tomorrow-btn">Next</button>
   </div>
 </div>
 <div id="new-save-btns">
@@ -62,7 +93,7 @@
           <div>
             <select name="select">
               <option
-                :for={option <- possible_options(assigns, habit)}
+                :for={option <- display_options(assigns, habit)}
                 value={option}
                 phx-click="select"
                 phx-value-habit={habit}
@@ -70,40 +101,9 @@
                 <%= option %>
               </option>
             </select>
-            <div id="options-reset">
-              <input
-                type="button"
-                value="option"
-                id="options"
-                name="habit"
-                phx-click="open-option"
-                phx-value-habit={habit}
-              />
-              <input
-                type="button"
-                value="clear"
-                id="reset"
-                name="habit"
-                phx-click="reset-options"
-                phx-value-habit={habit}
-              />
-            </div>
-            <div id="option-chart">
-              <.form :if={@open_option == habit} for={@form} phx-submit="add-option">
-                <.input
-                  type="text"
-                  field={@form["new_option"]}
-                  placeholder="Add option"
-                  name="option"
-                  autocomplete="off"
-                  id="option-input"
-                />
-                <.input type="hidden" name="habit" value={habit} />
-              </.form>
-            </div>
           </div>
           <div id="chart-link">
-            <.link :if={@open_option != habit} href={~p"/habits/#{habit}"}>
+            <.link href={~p"/habits/#{habit}"}>
               chart
             </.link>
           </div>

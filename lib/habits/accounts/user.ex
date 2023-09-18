@@ -49,7 +49,7 @@ defmodule Habits.Accounts.User do
     changeset
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[a-zA-Z\d_@\.]+$/, message: "invalid characters")
-    |> validate_format(:email, ~r/.+@(hotmail|gmail|outlook|doofinder|yahoo)\.com$/,
+    |> validate_format(:email, ~r/.+@(hotmail|gmail|outlook|doofinder|yahoo|google)\.(es|com)$/,
       message: "invalid extension"
     )
     |> validate_length(:email, max: 160)

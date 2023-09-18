@@ -32,14 +32,16 @@ defmodule HabitsWeb.UserRegistrationLive do
         method="post"
       >
         <.error :if={@check_errors}>
-          Oops, something went wrong! Please check the errors below.
+          Check the errors below.
         </.error>
 
         <.input field={@form[:email]} type="email" label="Email" phx-debounce="400" required />
         <.input field={@form[:password]} type="password" label="Password" required />
 
         <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+          <.button phx-disable-with="Creating account..." class="w-full fit-button">
+            Create an account
+          </.button>
         </:actions>
       </.simple_form>
     </div>
