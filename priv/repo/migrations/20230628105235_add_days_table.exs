@@ -9,6 +9,6 @@ defmodule Habits.Repo.Migrations.AddDaysTable do
       timestamps()
     end
 
-    create index(:days, :user_id)
+    create index(:days, [:user_id])
   end
 end

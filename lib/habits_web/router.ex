@@ -67,8 +67,9 @@ defmodule HabitsWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{HabitsWeb.UserAuth, :ensure_authenticated}] do
       live "/habits", TrackerLive
+      live "/habits/goals", GoalsLive
       live "/habits/:habit", ChartLive
-      live "/table", TableLive
+      live "/habits/table", TableLive
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

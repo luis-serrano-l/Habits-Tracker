@@ -8,7 +8,7 @@ defmodule Habits.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Habits", "contact@example.com"})
+      |> from({"Habits", "luis.serrano.l@programmer.net"})
       |> subject(subject)
       |> text_body(body)
 

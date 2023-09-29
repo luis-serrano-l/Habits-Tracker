@@ -7,10 +7,11 @@ defmodule HabitsWeb.UserSettingsLive do
     ~H"""
     <.header class="text-center">
       Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
+      <:subtitle>Manage your account password settings</:subtitle>
     </.header>
 
     <div class="space-y-12 divide-y" id="settings">
+      <!--
       <div>
         <.simple_form
           for={@email_form}
@@ -24,6 +25,7 @@ defmodule HabitsWeb.UserSettingsLive do
           </:actions>
         </.simple_form>
       </div>
+       -->
       <div>
         <.simple_form
           for={@password_form}

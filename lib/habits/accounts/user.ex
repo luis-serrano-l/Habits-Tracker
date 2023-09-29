@@ -2,6 +2,7 @@ defmodule Habits.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Habits.Tracker.Day
+  alias Habits.Goal.Habit
 
   schema "users" do
     field :email, :string
@@ -11,8 +12,15 @@ defmodule Habits.Accounts.User do
 
     timestamps()
 
+    has_many :habits, Habit, on_replace: :delete
     has_many :days, Day, on_replace: :delete
-    has_many :daily_habits, through: [:days, :daily_habits]
+    has_many :habits_status, through: [:days, :habits_status]
+  end
+
+  def changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:name])
+    |> cast_assoc(:days, with: &Day.changeset/2)
   end
 
   @doc """

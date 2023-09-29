@@ -1,0 +1,45 @@
+<h1>My goals</h1>
+<div id="new-save-btns">
+  <button phx-click="new-habit" id="new-btn">
+    New
+  </button>
+  <button :if={@deleting == false} phx-click="allow-delete" id="save-btn">
+    Delete
+  </button>
+  <button :if={@deleting} phx-click="disable-delete" id="disable-btn">
+    Disable delete
+  </button>
+  <.link navigate={~p"/habits/table"} id="table-link">
+    TABLE
+  </.link>
+</div>
+<div :if={@new} class="form">
+  <.form for={@form} phx-submit="add-habit">
+    <.input
+      type="text"
+      field={@form["new_habit"]}
+      placeholder="New habit"
+      id="text-input"
+      name="habit"
+    />
+    <.button id="submit" phx-disable-with="Sending...">Add</.button>
+  </.form>
+</div>
+<div id="habits">
+  <div :for={habit <- @habits}>
+    <div class="habit">
+      <span id="habit-name"><%= habit %></span>
+    </div>
+    <div :if={@deleting} id="each">
+      <input
+        type="button"
+        data-confirm="Are you sure you want to stop keeping track of this habit?"
+        value="delete"
+        id="delete"
+        name="habit"
+        phx-click="delete-habit"
+        phx-value-habit={habit}
+      />
+    </div>
+  </div>
+</div>

@@ -39,6 +39,8 @@ defmodule HabitsWeb.UserForgotPasswordLive do
       )
     end
 
+    Process.send_after(self(), :clear_flash, 1200)
+
     info =
       "If your email is in our system, you will receive instructions to reset your password shortly."
 
@@ -46,5 +48,9 @@ defmodule HabitsWeb.UserForgotPasswordLive do
      socket
      |> put_flash(:info, info)
      |> redirect(to: ~p"/")}
+  end
+
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 end

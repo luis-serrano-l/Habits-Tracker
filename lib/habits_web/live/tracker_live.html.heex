@@ -28,6 +28,13 @@
   <div id="menu-container">
     <div id="user-box" class="hidden">
       <.link
+        href={~p"/habits/goals"}
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        id="user-link"
+      >
+        Habits
+      </.link>
+      <.link
         href={~p"/users/settings"}
         class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
         id="user-link"
@@ -61,29 +68,6 @@
     <button phx-click="tomorrow" id="tomorrow-btn">Next</button>
   </div>
 </div>
-<div id="new-save-btns">
-  <button phx-click="new-habit" id="new-btn">
-    New
-  </button>
-  <button phx-click="save" id="save-btn" phx-disable-with="Saving...">
-    Save
-  </button>
-  <.link navigate={~p"/table"} id="table-link">
-    TABLE
-  </.link>
-</div>
-<div :if={@new} class="form">
-  <.form for={@form} phx-submit="add-habit">
-    <.input
-      type="text"
-      field={@form["new_habit"]}
-      placeholder="New habit"
-      id="text-input"
-      name="habit"
-    />
-    <.button id="submit" phx-disable-with="Sending...">Add</.button>
-  </.form>
-</div>
 <div id="habits">
   <div :for={habit <- @habits}>
     <div class="habit">
@@ -92,14 +76,16 @@
         <div id="chart-option">
           <div>
             <select name="select">
-              <option
-                :for={option <- display_options(assigns, habit)}
-                value={option}
-                phx-click="select"
-                phx-value-habit={habit}
-              >
-                <%= option %>
-              </option>
+              <%= for status_option <- ["", "Yes", "No"] do %>
+                <option
+                  value={status_option}
+                  phx-click="select"
+                  phx-value-habit={habit}
+                  selected={selected?(assigns.habits_status, habit, status_option)}
+                >
+                  <%= status_option %>
+                </option>
+              <% end %>
             </select>
           </div>
           <div id="chart-link">
@@ -109,17 +95,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div id="each">
-      <input
-        type="button"
-        data-confirm="Are you sure you want to stop keeping track of this habit?"
-        value="delete"
-        id="delete"
-        name="habit"
-        phx-click="delete-habit"
-        phx-value-habit={habit}
-      />
     </div>
   </div>
 </div>

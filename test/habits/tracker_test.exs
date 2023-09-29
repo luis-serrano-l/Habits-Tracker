@@ -65,171 +65,61 @@ defmodule Habits.TrackerTest do
     import Habits.TrackerFixtures
 
     @invalid_attrs %{name: nil, options: nil, select: nil}
-
-    test "list_habits/0 returns all habits" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.list_habits() == [daily_habit]
-    end
-
-    test "get_daily_habit!/1 returns the daily_habit with given id" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.get_daily_habit!(daily_habit.id) == daily_habit
-    end
-
-    test "create_daily_habit/1 with valid data creates a daily_habit" do
-      valid_attrs = %{name: "some name", options: ["option1", "option2"], select: "some select"}
-
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.create_daily_habit(valid_attrs)
-      assert daily_habit.name == "some name"
-      assert daily_habit.options == ["option1", "option2"]
-      assert daily_habit.select == "some select"
-    end
-
-    test "create_daily_habit/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Tracker.create_daily_habit(@invalid_attrs)
-    end
-
-    test "update_daily_habit/2 with valid data updates the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      update_attrs = %{name: "some updated name", options: ["option1"], select: "some updated select"}
-
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.update_daily_habit(daily_habit, update_attrs)
-      assert daily_habit.name == "some updated name"
-      assert daily_habit.options == ["option1"]
-      assert daily_habit.select == "some updated select"
-    end
-
-    test "update_daily_habit/2 with invalid data returns error changeset" do
-      daily_habit = daily_habit_fixture()
-      assert {:error, %Ecto.Changeset{}} = Tracker.update_daily_habit(daily_habit, @invalid_attrs)
-      assert daily_habit == Tracker.get_daily_habit!(daily_habit.id)
-    end
-
-    test "delete_daily_habit/1 deletes the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      assert {:ok, %DailyHabit{}} = Tracker.delete_daily_habit(daily_habit)
-      assert_raise Ecto.NoResultsError, fn -> Tracker.get_daily_habit!(daily_habit.id) end
-    end
-
-    test "change_daily_habit/1 returns a daily_habit changeset" do
-      daily_habit = daily_habit_fixture()
-      assert %Ecto.Changeset{} = Tracker.change_daily_habit(daily_habit)
-    end
   end
 
-  describe "daily_habits" do
-    alias Habits.Tracker.DailyHabit
+  describe "habits_status" do
+    alias Habits.Tracker.HabitStatus
 
     import Habits.TrackerFixtures
 
-    @invalid_attrs %{name: nil, options: nil, select: nil}
+    @invalid_attrs %{name: nil, status: nil}
 
-    test "list_daily_habits/0 returns all daily_habits" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.list_daily_habits() == [daily_habit]
+    test "list_habits_status/0 returns all habits_status" do
+      habit_status = habit_status_fixture()
+      assert Tracker.list_habits_status() == [habit_status]
     end
 
-    test "get_daily_habit!/1 returns the daily_habit with given id" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.get_daily_habit!(daily_habit.id) == daily_habit
+    test "get_habit_status!/1 returns the habit_status with given id" do
+      habit_status = habit_status_fixture()
+      assert Tracker.get_habit_status!(habit_status.id) == habit_status
     end
 
-    test "create_daily_habit/1 with valid data creates a daily_habit" do
-      valid_attrs = %{name: "some name", options: ["option1", "option2"], select: "some select"}
+    test "create_habit_status/1 with valid data creates a habit_status" do
+      valid_attrs = %{name: "some name", status: "some status"}
 
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.create_daily_habit(valid_attrs)
-      assert daily_habit.name == "some name"
-      assert daily_habit.options == ["option1", "option2"]
-      assert daily_habit.select == "some select"
+      assert {:ok, %HabitStatus{} = habit_status} = Tracker.create_habit_status(valid_attrs)
+      assert habit_status.name == "some name"
+      assert habit_status.status == "some status"
     end
 
-    test "create_daily_habit/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Tracker.create_daily_habit(@invalid_attrs)
+    test "create_habit_status/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Tracker.create_habit_status(@invalid_attrs)
     end
 
-    test "update_daily_habit/2 with valid data updates the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      update_attrs = %{name: "some updated name", options: ["option1"], select: "some updated select"}
+    test "update_habit_status/2 with valid data updates the habit_status" do
+      habit_status = habit_status_fixture()
+      update_attrs = %{name: "some updated name", status: "some updated status"}
 
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.update_daily_habit(daily_habit, update_attrs)
-      assert daily_habit.name == "some updated name"
-      assert daily_habit.options == ["option1"]
-      assert daily_habit.select == "some updated select"
+      assert {:ok, %HabitStatus{} = habit_status} = Tracker.update_habit_status(habit_status, update_attrs)
+      assert habit_status.name == "some updated name"
+      assert habit_status.status == "some updated status"
     end
 
-    test "update_daily_habit/2 with invalid data returns error changeset" do
-      daily_habit = daily_habit_fixture()
-      assert {:error, %Ecto.Changeset{}} = Tracker.update_daily_habit(daily_habit, @invalid_attrs)
-      assert daily_habit == Tracker.get_daily_habit!(daily_habit.id)
+    test "update_habit_status/2 with invalid data returns error changeset" do
+      habit_status = habit_status_fixture()
+      assert {:error, %Ecto.Changeset{}} = Tracker.update_habit_status(habit_status, @invalid_attrs)
+      assert habit_status == Tracker.get_habit_status!(habit_status.id)
     end
 
-    test "delete_daily_habit/1 deletes the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      assert {:ok, %DailyHabit{}} = Tracker.delete_daily_habit(daily_habit)
-      assert_raise Ecto.NoResultsError, fn -> Tracker.get_daily_habit!(daily_habit.id) end
+    test "delete_habit_status/1 deletes the habit_status" do
+      habit_status = habit_status_fixture()
+      assert {:ok, %HabitStatus{}} = Tracker.delete_habit_status(habit_status)
+      assert_raise Ecto.NoResultsError, fn -> Tracker.get_habit_status!(habit_status.id) end
     end
 
-    test "change_daily_habit/1 returns a daily_habit changeset" do
-      daily_habit = daily_habit_fixture()
-      assert %Ecto.Changeset{} = Tracker.change_daily_habit(daily_habit)
-    end
-  end
-
-  describe "daily_habits" do
-    alias Habits.Tracker.DailyHabit
-
-    import Habits.TrackerFixtures
-
-    @invalid_attrs %{choice: nil, name: nil, options: nil}
-
-    test "list_daily_habits/0 returns all daily_habits" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.list_daily_habits() == [daily_habit]
-    end
-
-    test "get_daily_habit!/1 returns the daily_habit with given id" do
-      daily_habit = daily_habit_fixture()
-      assert Tracker.get_daily_habit!(daily_habit.id) == daily_habit
-    end
-
-    test "create_daily_habit/1 with valid data creates a daily_habit" do
-      valid_attrs = %{choice: "some choice", name: "some name", options: ["option1", "option2"]}
-
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.create_daily_habit(valid_attrs)
-      assert daily_habit.choice == "some choice"
-      assert daily_habit.name == "some name"
-      assert daily_habit.options == ["option1", "option2"]
-    end
-
-    test "create_daily_habit/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Tracker.create_daily_habit(@invalid_attrs)
-    end
-
-    test "update_daily_habit/2 with valid data updates the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      update_attrs = %{choice: "some updated choice", name: "some updated name", options: ["option1"]}
-
-      assert {:ok, %DailyHabit{} = daily_habit} = Tracker.update_daily_habit(daily_habit, update_attrs)
-      assert daily_habit.choice == "some updated choice"
-      assert daily_habit.name == "some updated name"
-      assert daily_habit.options == ["option1"]
-    end
-
-    test "update_daily_habit/2 with invalid data returns error changeset" do
-      daily_habit = daily_habit_fixture()
-      assert {:error, %Ecto.Changeset{}} = Tracker.update_daily_habit(daily_habit, @invalid_attrs)
-      assert daily_habit == Tracker.get_daily_habit!(daily_habit.id)
-    end
-
-    test "delete_daily_habit/1 deletes the daily_habit" do
-      daily_habit = daily_habit_fixture()
-      assert {:ok, %DailyHabit{}} = Tracker.delete_daily_habit(daily_habit)
-      assert_raise Ecto.NoResultsError, fn -> Tracker.get_daily_habit!(daily_habit.id) end
-    end
-
-    test "change_daily_habit/1 returns a daily_habit changeset" do
-      daily_habit = daily_habit_fixture()
-      assert %Ecto.Changeset{} = Tracker.change_daily_habit(daily_habit)
+    test "change_habit_status/1 returns a habit_status changeset" do
+      habit_status = habit_status_fixture()
+      assert %Ecto.Changeset{} = Tracker.change_habit_status(habit_status)
     end
   end
 end
