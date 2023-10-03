@@ -50,3 +50,22 @@ let Hooks = {
     }
   }
 }
+$(document).ready(function() {
+      // Get references to the menu container and user box
+      const $menuContainer = $("#menu-container");
+      const $userBox = $("#user-box");
+
+      // Hide the user box initially
+      $userBox.hide();
+
+      // Toggle the user box visibility when the hamburger icon is clicked
+      $("#hamburger-icon").click(function() {
+        if ($userBox.is(":visible")) {
+          // User box is visible, so hide it
+          $userBox.hide();
+        } else {
+          // User box is hidden, so show it
+          $userBox.show();
+        }
+      });
+    });

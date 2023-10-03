@@ -198,8 +198,31 @@ defmodule HabitsWeb.UserAuth do
   If you want to enforce the user email is confirmed before
   they use the application at all, here would be a good place.
   """
+  """
   def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
+    user = conn.assigns[:current_user]
+
+    if user do
+      if is_nil(user.confirmed_at) do
+        conn
+        |> redirect(to: ~p"/users/verify")
+        |> halt()
+      else
+        conn
+      end
+    else
+      conn
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+  """
+
+  def require_authenticated_user(conn, _opts) do
+    user = conn.assigns[:current_user]
+
+    if user do
       conn
     else
       conn

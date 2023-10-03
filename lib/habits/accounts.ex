@@ -157,20 +157,28 @@ defmodule Habits.Accounts do
   end
 
   @doc ~S"""
-  Delivers the update email instructions to the given user.
+  Delivers the update password instructions to the given user.
 
   ## Examples
 
-      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/users/settings/confirm_email/#{&1})")
+      iex> deliver_user_change_password_instructions(user, current_email, &url(~p"/users/settings/confirm_email/#{&1})")
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
-      when is_function(update_email_url_fun, 1) do
+  def deliver_user_change_password_instructions(
+        %User{} = user,
+        current_email,
+        change_password_url_fun
+      )
+      when is_function(change_password_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
 
     Repo.insert!(user_token)
-    UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
+
+    UserNotifier.deliver_change_password_instructions(
+      user,
+      change_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -303,6 +311,28 @@ defmodule Habits.Accounts do
     {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
     Repo.insert!(user_token)
     UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
+  end
+
+  ## Change password
+
+  @doc ~S"""
+  Delivers the change password email to the given user.
+
+  ## Examples
+
+      iex> deliver_user_change_password_instructions(user, &url(~p"/users/reset_password/#{&1}"))
+      {:ok, %{to: ..., body: ...}}
+
+  """
+  def deliver_user_change_password_instructions(%User{} = user, change_password_url_fun)
+      when is_function(change_password_url_fun, 1) do
+    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
+    Repo.insert!(user_token)
+
+    UserNotifier.deliver_change_password_instructions(
+      user,
+      change_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """

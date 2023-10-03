@@ -22,8 +22,13 @@ defmodule HabitsWeb.UserSessionController do
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
-      conn
-      |> UserAuth.log_in_user(user, user_params)
+      if is_nil(user.confirmed_at) do
+        conn
+        |> redirect(to: ~p"/users/log_in")
+      else
+        conn
+        |> UserAuth.log_in_user(user, user_params)
+      end
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn

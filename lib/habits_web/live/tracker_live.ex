@@ -8,13 +8,9 @@ defmodule HabitsWeb.TrackerLive do
     today = NaiveDateTime.local_now() |> NaiveDateTime.to_date()
     user_id = Accounts.get_user_by_session_token(session["user_token"]).id
 
-    habits =
-      Tracker.list_habits(user_id)
-      |> IO.inspect(label: "EXISTING HABITS NAME, SHOULD BE A LIST OF STRINGS")
+    habits = Tracker.list_habits(user_id)
 
-    habits_status =
-      Tracker.get_habits_status(user_id, today)
-      |> IO.inspect(label: "ALL HABITS STATUS IN DB FOR RENDER, SHOULD BE [{ , }] => ")
+    habits_status = Tracker.get_habits_status(user_id, today)
 
     socket =
       assign(socket,

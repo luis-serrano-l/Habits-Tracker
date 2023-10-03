@@ -56,7 +56,7 @@ defmodule HabitsWeb.UserSettingsLiveTest do
         lv
         |> element("#email_form")
         |> render_change(%{
-          "action" => "update_email",
+          "action" => "update_password",
           "current_password" => "invalid",
           "user" => %{"email" => "with spaces"}
         })
@@ -165,7 +165,11 @@ defmodule HabitsWeb.UserSettingsLiveTest do
 
       token =
         extract_user_token(fn url ->
-          Accounts.deliver_user_update_email_instructions(%{user | email: email}, user.email, url)
+          Accounts.deliver_user_update_password_instructions(
+            %{user | email: email},
+            user.email,
+            url
+          )
         end)
 
       %{conn: log_in_user(conn, user), token: token, email: email, user: user}

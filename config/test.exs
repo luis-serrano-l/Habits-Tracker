@@ -21,7 +21,7 @@ config :habits, Habits.Repo,
 config :habits, HabitsWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "OLbouzIIYP8LlIzsRs+v967QJHxpmljXT3XMfqP6ztKi8eBOJDMjb4UxDesxSZU/",
-  server: false
+  server: true
 
 # In test we don't send emails.
 config :habits, Habits.Mailer, adapter: Swoosh.Adapters.Test

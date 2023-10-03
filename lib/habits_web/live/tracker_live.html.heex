@@ -1,28 +1,3 @@
-<head>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js">
-  </script>
-  <script>
-    $(document).ready(function() {
-      // Get references to the menu container and user box
-      var $menuContainer = $("#menu-container");
-      var $userBox = $("#user-box");
-
-      // Hide the user box initially
-      $userBox.hide();
-
-      // Toggle the user box visibility when the hamburger icon is clicked
-      $("#hamburger-icon").click(function() {
-        if ($userBox.is(":visible")) {
-          // User box is visible, so hide it
-          $userBox.hide();
-        } else {
-          // User box is hidden, so show it
-          $userBox.show();
-        }
-      });
-    });
-  </script>
-</head>
 <h1>My habits for happiness</h1>
 <div id="corner-links">
   <div id="menu-container">

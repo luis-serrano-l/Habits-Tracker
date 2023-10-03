@@ -70,8 +70,9 @@ defmodule HabitsWeb.Router do
       live "/habits/goals", GoalsLive
       live "/habits/:habit", ChartLive
       live "/habits/table", TableLive
-      live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/users/settings", UserRequestPasswordChangeLive, :edit
+      live "/users/update_password/:token", UserUpdatePasswordLive, :edit
     end
   end
 

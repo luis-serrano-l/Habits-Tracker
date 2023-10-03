@@ -9,9 +9,11 @@
   <button :if={@deleting} phx-click="disable-delete" id="disable-btn">
     Disable delete
   </button>
+  <!-- 
   <.link navigate={~p"/habits/table"} id="table-link">
     TABLE
   </.link>
+   -->
 </div>
 <div :if={@new} class="form">
   <.form for={@form} phx-submit="add-habit">
@@ -24,6 +26,40 @@
     />
     <.button id="submit" phx-disable-with="Sending...">Add</.button>
   </.form>
+</div>
+<div id="corner-links">
+  <div id="menu-container">
+    <div id="user-box" class="hidden">
+      <.link
+        href={~p"/habits"}
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        id="user-link"
+      >
+        Track
+      </.link>
+      <.link
+        href={~p"/users/settings"}
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        id="user-link"
+      >
+        Settings
+      </.link>
+      <.link
+        href={~p"/users/log_out"}
+        id="user-link"
+        method="delete"
+        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+      >
+        Log out
+      </.link>
+    </div>
+    <!-- Hamburger Icon -->
+    <div id="hamburger-icon" class="menu-icon">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
 </div>
 <div id="habits">
   <div :for={habit <- @habits}>

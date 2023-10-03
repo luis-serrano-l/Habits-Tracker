@@ -148,7 +148,7 @@ p {
 }
 
 #user-link {
-  color: rgb(255, 255, 255);
+  color: #daffeb;
 }
 
 main.container {
@@ -261,6 +261,7 @@ p {
 #menu-container.active #user-box {
   right: 0; /* Move it to the left of the container */
   display: block; /* Show the user box */
+  background-color: #dde6ef;
 }
 
 #table-link {
@@ -557,11 +558,11 @@ label {
 a {
   text-decoration: none; 
   transition: color 0.05s ease; 
-  color: rgb(24, 24, 144);
+  color: #9494d2; 
 }
 
-a:hover {
-  color: #292bb4; 
+a:hover{
+  color: rgb(96, 161, 207);
   text-decoration: underline; 
 }
 

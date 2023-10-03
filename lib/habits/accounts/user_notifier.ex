@@ -8,7 +8,7 @@ defmodule Habits.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Habits", "luis.serrano.l@programmer.net"})
+      |> from({"Habits Tracker", "luis.serrano.l@programmer.net"})
       |> subject(subject)
       |> text_body(body)
 
@@ -60,14 +60,14 @@ defmodule Habits.Accounts.UserNotifier do
   @doc """
   Deliver instructions to update a user email.
   """
-  def deliver_update_email_instructions(user, url) do
-    deliver(user.email, "Update email instructions", """
+  def deliver_change_password_instructions(user, url) do
+    deliver(user.email, "Update password instructions", """
 
     ==============================
 
     Hi #{user.email},
 
-    You can change your email by visiting the URL below:
+    You can change your password by visiting the URL below:
 
     #{url}
 

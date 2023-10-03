@@ -1,4 +1,4 @@
-defmodule HabitsWeb.UserResetPasswordLive do
+defmodule HabitsWeb.UserUpdatePasswordLive do
   use HabitsWeb, :live_view
 
   alias Habits.Accounts
@@ -6,7 +6,7 @@ defmodule HabitsWeb.UserResetPasswordLive do
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
-      <.header class="text-center">Reset Password</.header>
+      <.header class="text-center">Update Password</.header>
 
       <.simple_form
         for={@form}
@@ -26,14 +26,22 @@ defmodule HabitsWeb.UserResetPasswordLive do
           required
         />
         <:actions>
-          <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
+          <.button phx-disable-with="Updating..." class="w-full">Update Password</.button>
         </:actions>
       </.simple_form>
-
-      <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
-      </p>
+      <div id="corner-links">
+        <div id="menu-container">
+          <div id="user-box" class="hidden">
+            <.link href={~p"/habits/goals"} id="user-link">Habits</.link>
+            <.link href={~p"/habits"} id="user-link">Track</.link>
+          </div>
+          <!-- Hamburger Icon -->
+          <div id="hamburger-icon" class="menu-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
     </div>
     """
   end
@@ -62,8 +70,9 @@ defmodule HabitsWeb.UserResetPasswordLive do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Password reset successfully.")
-         |> redirect(to: ~p"/users/log_in")}
+         |> put_flash(:info, "Password changed successfully.")
+         |> redirect(to: ~p"/users/log_in")
+         |> IO.inspect(label: "REDIRECTED IN UPDATE LIVE")}
 
       {:error, changeset} ->
         {:noreply, assign_form(socket, Map.put(changeset, :action, :insert))}
@@ -80,7 +89,7 @@ defmodule HabitsWeb.UserResetPasswordLive do
       assign(socket, user: user, token: token)
     else
       socket
-      |> put_flash(:error, "Reset password link is invalid or it has expired.")
+      |> put_flash(:error, "Update password link is invalid or it has expired.")
       |> redirect(to: ~p"/")
     end
   end
